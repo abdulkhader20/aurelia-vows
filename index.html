@@ -575,21 +575,21 @@
   </div>
 
   <!-- ===================================================================== -->
-  <!-- JAVASCRIPT DATA & INTERACTIVE LOGIC                                   -->
+  <!-- JAVASCRIPT: 9 TEMPLATES DATA, 3D DOORS, SCRATCH CARD & ENQUIRY LOGIC  -->
   <!-- ===================================================================== -->
   <script>
     const TEMPLATES = [
       {
-        id: 'muslim-1',
-        category: 'muslim',
+        id: 'muslim-emerald',
+        cat: 'muslim',
         badge: 'Muslim • ₹999',
         title: 'Emerald & Gold Royal Nikah',
-        desc: 'Crescent seal 3D doors, Surah An-Naba verse full-screen hero, golden foil scratch card, Falaknuma & Banjara Hills venues, gallery, and family hosts.',
+        desc: 'Crescent seal 3D doors, Surah verse full-screen hero, golden foil scratch card, Nikah & Walima Google Maps buttons, Save the Date, gallery, and family hosts.',
         bgMain: '#061c14',
         textMain: '#f4efe6',
         doorBg: 'radial-gradient(circle at center, #0e3b2b 0%, #04140e 100%)',
         heroGrad: 'linear-gradient(to bottom, rgba(4,20,14,0.55), rgba(6,28,20,0.92))',
-        cardBg: 'rgba(11, 43, 31, 0.88)',
+        cardBg: 'rgba(11, 43, 31, 0.85)',
         sealIcon: '☪️',
         sealTitle: 'BISMILLAH',
         sealSub: 'Tap Seal to Open',
@@ -606,19 +606,19 @@
             icon: '🕌',
             name: 'Nikah Ceremony',
             detail: 'Sunday, 20th December 2026 at 11:30 AM<br><strong>Falaknuma Royal Palace Banquet</strong><br>Engine Bowli, Falaknuma, Hyderabad, Telangana',
+            mapUrl: 'https://maps.google.com/?q=Taj+Falaknuma+Palace+Hyderabad',
             venueText: 'Falaknuma Royal Palace Banquet, Engine Bowli, Falaknuma, Hyderabad, Telangana',
-            startICS: '20261220T113000',
-            endICS: '20261220T143000',
-            mapUrl: 'https://maps.google.com/?q=Taj+Falaknuma+Palace+Hyderabad'
+            startICS: '20261220T060000Z',
+            endICS: '20261220T090000Z'
           },
           {
             icon: '✨',
             name: 'Dawat-e-Walima',
             detail: 'Monday, 21st December 2026 at 7:30 PM<br><strong>Nizam Grand Convention Hall</strong><br>Banjara Hills Road No. 12, Hyderabad',
+            mapUrl: 'https://maps.google.com/?q=Banjara+Hills+Hyderabad',
             venueText: 'Nizam Grand Convention Hall, Banjara Hills Road No. 12, Hyderabad',
-            startICS: '20261221T193000',
-            endICS: '20261221T223000',
-            mapUrl: 'https://maps.google.com/?q=Banjara+Hills+Hyderabad'
+            startICS: '20261221T140000Z',
+            endICS: '20261221T173000Z'
           }
         ],
         gallery: [
@@ -632,16 +632,16 @@
         relatives: 'With Best Compliments From: Siddiqui &amp; Ahmed Families, Brothers, Sisters &amp; Dear Friends'
       },
       {
-        id: 'muslim-2',
-        category: 'muslim',
+        id: 'muslim-midnight',
+        cat: 'muslim',
         badge: 'Muslim • ₹1,299',
         title: 'Midnight Sapphire & Pearl Nikah',
-        desc: 'Lantern-lit royal midnight blue theme with crescent moon seal 3D doors, date scratch card, Charminar & Jubilee Hills Google Maps, and family hosts.',
+        desc: 'Lantern-lit royal midnight blue theme with crescent seal doors, date scratch card, Masjid & Banquet Google Maps buttons, Save the Date, and family hosts.',
         bgMain: '#070e1c',
         textMain: '#f4efe6',
         doorBg: 'radial-gradient(circle at center, #112447 0%, #050a14 100%)',
         heroGrad: 'linear-gradient(to bottom, rgba(5,10,20,0.5), rgba(7,14,28,0.92))',
-        cardBg: 'rgba(14, 28, 56, 0.88)',
+        cardBg: 'rgba(14, 28, 56, 0.85)',
         sealIcon: '🌙',
         sealTitle: 'NIKAH MUBARAK',
         sealSub: 'Tap Crescent to Open',
@@ -658,19 +658,19 @@
             icon: '🕌',
             name: 'Nikah Ceremony',
             detail: 'Saturday, 9th January 2027 at 12:00 PM<br><strong>Mecca Masjid Royal Courtyard</strong><br>Charminar, Hyderabad, Telangana',
+            mapUrl: 'https://maps.google.com/?q=Charminar+Hyderabad',
             venueText: 'Mecca Masjid Royal Courtyard, Charminar, Hyderabad, Telangana',
-            startICS: '20270109T120000',
-            endICS: '20270109T150000',
-            mapUrl: 'https://maps.google.com/?q=Charminar+Hyderabad'
+            startICS: '20270109T063000Z',
+            endICS: '20270109T093000Z'
           },
           {
             icon: '🥂',
             name: 'Walima Reception',
             detail: 'Sunday, 10th January 2027 at 8:00 PM<br><strong>Kohinoor Imperial Convention</strong><br>Jubilee Hills, Hyderabad',
+            mapUrl: 'https://maps.google.com/?q=Jubilee+Hills+Hyderabad',
             venueText: 'Kohinoor Imperial Convention, Jubilee Hills, Hyderabad',
-            startICS: '20270110T200000',
-            endICS: '20270110T230000',
-            mapUrl: 'https://maps.google.com/?q=Jubilee+Hills+Hyderabad'
+            startICS: '20270110T143000Z',
+            endICS: '20270110T180000Z'
           }
         ],
         gallery: [
@@ -684,68 +684,68 @@
         relatives: 'With Warm Regards: Mirza &amp; Qureshi Families, Uncles, Aunts &amp; Cousins'
       },
       {
-        id: 'muslim-3',
-        category: 'muslim',
+        id: 'muslim-desert-rose',
+        cat: 'muslim',
         badge: 'Muslim • ₹1,499',
         title: 'Desert Rose & Sandstone Palace Nikah',
-        desc: 'Warm Mughal rosewood & antique brass theme with lantern seal 3D doors, Surah Ar-Rum verse, golden scratch card, Chowmahalla & Golconda venues, and family hosts.',
-        bgMain: '#261015',
-        textMain: '#fdf3f0',
-        doorBg: 'radial-gradient(circle at center, #592330 0%, #210b10 100%)',
-        heroGrad: 'linear-gradient(to bottom, rgba(33,11,16,0.48), rgba(38,16,21,0.92))',
-        cardBg: 'rgba(68, 26, 36, 0.88)',
+        desc: 'Mughal rosewood & antique brass theme with Qubool Hai doors, Surah Ar-Rum verse, Chowmahalla & Golconda venues, Save the Date, and family credits.',
+        bgMain: '#241118',
+        textMain: '#fdf5f7',
+        doorBg: 'radial-gradient(circle at center, #522335 0%, #1d0c13 100%)',
+        heroGrad: 'linear-gradient(to bottom, rgba(29,12,19,0.5), rgba(36,17,24,0.92))',
+        cardBg: 'rgba(66, 28, 43, 0.85)',
         sealIcon: '🕌',
         sealTitle: 'QUBOOL HAI',
-        sealSub: 'Tap Palace Seal to Open',
+        sealSub: 'Tap Arch Seal to Open',
         heroBg: 'https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=1920&q=80',
         verse: '“And He placed between you affection and mercy” — Surah Ar-Rum (30:21)',
         groom: 'Rehan Baig',
-        bride: 'Mehwish Sultana',
-        inviteLine: 'Solicit your presence &amp; duas at their auspicious Nikah &amp; Walima',
+        bride: 'Mehreen Fatima',
+        inviteLine: 'Solicit your prayers and presence on the auspicious occasion of their Nikah',
         dateDay: 'Sunday',
-        dateBig: '21 MAR 2027',
-        dateTime: 'Nikah at 11:45 AM • Royal Dastarkhwan',
+        dateBig: '07 FEB 2027',
+        dateTime: 'Nikah at 11:45 AM • Royal Dastarkhwan 1:30 PM',
         events: [
           {
             icon: '🕌',
-            name: 'Nikah-e-Khas',
-            detail: 'Sunday, 21st March 2027 at 11:45 AM<br><strong>Chowmahalla Palace Durbar Hall</strong><br>Khilwat, Motigalli, Hyderabad',
+            name: 'Shahi Nikah Ceremony',
+            detail: 'Sunday, 7th February 2027 at 11:45 AM<br><strong>Chowmahalla Palace Durbar Hall</strong><br>Khilwat, Motigalli, Hyderabad',
+            mapUrl: 'https://maps.google.com/?q=Chowmahalla+Palace+Hyderabad',
             venueText: 'Chowmahalla Palace Durbar Hall, Khilwat, Hyderabad',
-            startICS: '20270321T114500',
-            endICS: '20270321T143000',
-            mapUrl: 'https://maps.google.com/?q=Chowmahalla+Palace+Hyderabad'
+            startICS: '20270207T061500Z',
+            endICS: '20270207T093000Z'
           },
           {
             icon: '✨',
-            name: 'Jashn-e-Walima',
-            detail: 'Monday, 22nd March 2027 at 8:00 PM<br><strong>Golconda Resorts &amp; Royal Lawns</strong><br>Gandipet, Hyderabad',
-            venueText: 'Golconda Resorts & Royal Lawns, Gandipet, Hyderabad',
-            startICS: '20270322T200000',
-            endICS: '20270322T230000',
-            mapUrl: 'https://maps.google.com/?q=Golkonda+Resorts+and+Spa+Hyderabad'
+            name: 'Grand Walima Dinner',
+            detail: 'Monday, 8th February 2027 at 8:00 PM<br><strong>Golconda Resorts &amp; Spa Lawns</strong><br>Gandipet, Hyderabad',
+            mapUrl: 'https://maps.google.com/?q=Golkonda+Resorts+and+Spa+Hyderabad',
+            venueText: 'Golconda Resorts & Spa Lawns, Gandipet, Hyderabad',
+            startICS: '20270208T143000Z',
+            endICS: '20270208T180000Z'
           }
         ],
         gallery: [
           'https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=800&q=80',
           'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80',
-          'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80',
-          'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=800&q=80'
+          'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80'
         ],
-        groomFamily: 'Son of<br><strong>Janab Aslam Baig Sahab</strong><br>&amp; <strong>Mohtarma Parveen Begum</strong><br>Grandson of Late Janab Akram Baig',
-        brideFamily: 'Daughter of<br><strong>Janab Nadeemuddin Sahab</strong><br>&amp; <strong>Mohtarma Farhana Sultana</strong><br>Granddaughter of Haji Qamaruddin',
-        relatives: 'With Warmest Duas: Baig &amp; Siddiqui Families, Elders &amp; Friends'
+        groomFamily: 'Son of<br><strong>Janab Asif Baig Sahab</strong><br>&amp; <strong>Mohtarma Parveen Baig</strong><br>Grandson of Late Nawab Mirza Baig',
+        brideFamily: 'Daughter of<br><strong>Dr. Nadeem Hashmi</strong><br>&amp; <strong>Mrs. Ayesha Hashmi</strong><br>Granddaughter of Janab Mazhar Hashmi',
+        relatives: 'With Love &amp; Duas: Baig &amp; Hashmi Families, Elders &amp; Friends'
       },
       {
-        id: 'hindu-1',
-        category: 'hindu',
+        id: 'hindu-crimson',
+        cat: 'hindu',
         badge: 'Hindu • ₹999',
         title: 'Sacred Crimson & Gold Vivah',
-        desc: 'Om & Kalash seal 3D doors, Sanskrit mantra hero, scratch-to-reveal Muhurtham date, Tirupati & Rajahmundry venues, gallery, and family elders.',
+        desc: 'Om & Kalash seal 3D doors, Sanskrit mantra hero, scratch-to-reveal Muhurtham date, Mandapam & Reception Google Maps buttons, Save the Date, and family elders.',
         bgMain: '#240509',
         textMain: '#fdf5eb',
         doorBg: 'radial-gradient(circle at center, #5c0b16 0%, #240408 100%)',
         heroGrad: 'linear-gradient(to bottom, rgba(36,4,8,0.5), rgba(36,5,9,0.92))',
-        cardBg: 'rgba(68, 10, 18, 0.88)',
+        cardBg: 'rgba(68, 10, 18, 0.85)',
         sealIcon: '🕉️',
         sealTitle: 'SHUBH VIVAH',
         sealSub: 'Tap Kalash Seal to Open',
@@ -762,19 +762,19 @@
             icon: '🔥',
             name: 'Subha Muhurtham (Vivah)',
             detail: 'Friday, 15th January 2027 at 10:15 AM<br><strong>Sri Padmavathi Kalyana Mandapam</strong><br>Tiruchanur Road, Tirupati, Andhra Pradesh',
+            mapUrl: 'https://maps.google.com/?q=Tirupati+Andhra+Pradesh',
             venueText: 'Sri Padmavathi Kalyana Mandapam, Tiruchanur Road, Tirupati, Andhra Pradesh',
-            startICS: '20270115T101500',
-            endICS: '20270115T133000',
-            mapUrl: 'https://maps.google.com/?q=Tirupati+Andhra+Pradesh'
+            startICS: '20270115T044500Z',
+            endICS: '20270115T080000Z'
           },
           {
             icon: '🪔',
             name: 'Grand Wedding Reception',
             detail: 'Saturday, 16th January 2027 at 7:00 PM<br><strong>Grand Lotus Convention Centre</strong><br>Rajahmundry, Andhra Pradesh',
+            mapUrl: 'https://maps.google.com/?q=Rajahmundry+Andhra+Pradesh',
             venueText: 'Grand Lotus Convention Centre, Rajahmundry, Andhra Pradesh',
-            startICS: '20270116T190000',
-            endICS: '20270116T223000',
-            mapUrl: 'https://maps.google.com/?q=Rajahmundry+Andhra+Pradesh'
+            startICS: '20270116T133000Z',
+            endICS: '20270116T170000Z'
           }
         ],
         gallery: [
@@ -788,21 +788,21 @@
         relatives: 'Invited By: Sharma &amp; Iyer Families, Elders, Cousins &amp; Well-Wishers'
       },
       {
-        id: 'hindu-2',
-        category: 'hindu',
+        id: 'hindu-marigold',
+        cat: 'hindu',
         badge: 'Hindu • ₹1,299',
         title: 'Royal Marigold & Sandalwood Kalyanam',
-        desc: 'Warm saffron & temple bronze South Indian wedding theme with Lotus seal doors, Muhurtham scratch card, Annavaram & Visakhapatnam venues, and family names.',
+        desc: 'Warm saffron & temple bronze South Indian wedding theme with golden doors, Muhurtham scratch card, temple & banquet Google Maps buttons, Save the Date, and family names.',
         bgMain: '#261204',
         textMain: '#fff8ee',
         doorBg: 'radial-gradient(circle at center, #6b340a 0%, #291203 100%)',
         heroGrad: 'linear-gradient(to bottom, rgba(41,18,3,0.48), rgba(38,18,4,0.92))',
-        cardBg: 'rgba(74, 36, 8, 0.88)',
+        cardBg: 'rgba(74, 36, 8, 0.85)',
         sealIcon: '🪷',
         sealTitle: 'SUBHA KALYANAM',
         sealSub: 'Tap Lotus Seal to Open',
         heroBg: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=1920&q=80',
-        verse: '॥ शुभमस्तु ॥ May Lord Venkateswara shower eternal joy &amp; prosperity upon the couple',
+        verse: '॥ शुभमस्तु ॥ May Lord Venkateswara shower eternal joy & prosperity upon the couple',
         groom: 'Karthik Reddy',
         bride: 'Priyanka Rao',
         inviteLine: 'Cordially invite you and your family to bless the newlyweds',
@@ -814,19 +814,19 @@
             icon: '🛕',
             name: 'Kalyana Mahotsavam',
             detail: 'Thursday, 18th February 2027 at 9:45 AM<br><strong>Annavaram Temple Devasthanam Hall</strong><br>Annavaram, Andhra Pradesh',
+            mapUrl: 'https://maps.google.com/?q=Annavaram+Andhra+Pradesh',
             venueText: 'Annavaram Temple Devasthanam Hall, Annavaram, Andhra Pradesh',
-            startICS: '20270218T094500',
-            endICS: '20270218T130000',
-            mapUrl: 'https://maps.google.com/?q=Annavaram+Andhra+Pradesh'
+            startICS: '20270218T041500Z',
+            endICS: '20270218T073000Z'
           },
           {
             icon: '🎊',
             name: 'Evening Reception & Dinner',
             detail: 'Friday, 19th February 2027 at 7:30 PM<br><strong>Novotel Varun Beach Ballroom</strong><br>Beach Road, Visakhapatnam',
+            mapUrl: 'https://maps.google.com/?q=Visakhapatnam+Beach+Road',
             venueText: 'Novotel Varun Beach Ballroom, Beach Road, Visakhapatnam',
-            startICS: '20270219T193000',
-            endICS: '20270219T223000',
-            mapUrl: 'https://maps.google.com/?q=Visakhapatnam+Beach+Road'
+            startICS: '20270219T140000Z',
+            endICS: '20270219T173000Z'
           }
         ],
         gallery: [
@@ -840,76 +840,76 @@
         relatives: 'With Best Compliments: Reddy &amp; Rao Families, Relatives &amp; Friends'
       },
       {
-        id: 'hindu-3',
-        category: 'hindu',
+        id: 'hindu-peacock-teal',
+        cat: 'hindu',
         badge: 'Hindu • ₹1,499',
         title: 'Peacock Teal & Temple Gold Vivah',
-        desc: 'Regal Mysuru peacock teal & temple bronze theme with Sacred Agni doors, Vedic Saptapadi blessing, date scratch card, Mysuru & Bengaluru palace venues, and family hosts.',
+        desc: 'Regal Mysuru peacock teal & burnished gold theme with Mangalyam doors, Saptapadi blessing, palace mandapam & reception venues, Save the Date, and family hosts.',
         bgMain: '#062124',
         textMain: '#f2fbfb',
         doorBg: 'radial-gradient(circle at center, #0e4a52 0%, #04191c 100%)',
-        heroGrad: 'linear-gradient(to bottom, rgba(4,25,28,0.48), rgba(6,33,36,0.92))',
-        cardBg: 'rgba(11, 56, 61, 0.88)',
+        heroGrad: 'linear-gradient(to bottom, rgba(4,25,28,0.5), rgba(6,33,36,0.92))',
+        cardBg: 'rgba(11, 56, 62, 0.85)',
         sealIcon: '🦚',
         sealTitle: 'MANGALYAM',
         sealSub: 'Tap Peacock Seal to Open',
         heroBg: 'https://images.unsplash.com/photo-1595407753234-0882f1e77954?auto=format&fit=crop&w=1920&q=80',
-        verse: '॥ मांगल्यं तन्तुनानेन मम जीवनहेतुना ॥ Seven Steps Together Into Eternity',
+        verse: '॥ मांगल्यं तन्तुनानेन मम जीवनहेतुना ॥ Seven steps together into eternal harmony',
         groom: 'Vikramaditya Nair',
         bride: 'Meera Krishnan',
-        inviteLine: 'Joyfully invite your esteemed presence &amp; blessings on their Sacred Vivah',
+        inviteLine: 'Request the pleasure of your blessings at their Traditional Vivah',
         dateDay: 'Wednesday',
-        dateBig: '14 APR 2027',
-        dateTime: 'Abhijit Muhurtham at 11:05 AM',
+        dateBig: '24 FEB 2027',
+        dateTime: 'Muhurtham at 10:30 AM • Sadhya Feast Follows',
         events: [
           {
-            icon: '🦚',
-            name: 'Vedic Vivah &amp; Saptapadi',
-            detail: 'Wednesday, 14th April 2027 at 11:05 AM<br><strong>Lalitha Mahal Palace Gardens</strong><br>Siddhartha Layout, Mysuru, Karnataka',
-            venueText: 'Lalitha Mahal Palace Gardens, Mysuru, Karnataka',
-            startICS: '20270414T110500',
-            endICS: '20270414T140000',
-            mapUrl: 'https://maps.google.com/?q=Lalitha+Mahal+Palace+Mysuru'
+            icon: '🪔',
+            name: 'Vedic Vivah & Saptapadi',
+            detail: 'Wednesday, 24th February 2027 at 10:30 AM<br><strong>Lalitha Mahal Palace Grounds</strong><br>Siddhartha Nagar, Mysuru, Karnataka',
+            mapUrl: 'https://maps.google.com/?q=Lalitha+Mahal+Palace+Mysuru',
+            venueText: 'Lalitha Mahal Palace Grounds, Siddhartha Nagar, Mysuru',
+            startICS: '20270224T050000Z',
+            endICS: '20270224T083000Z'
           },
           {
             icon: '✨',
-            name: 'Royal Reception Evening',
-            detail: 'Friday, 16th April 2027 at 7:30 PM<br><strong>The Leela Palace Grand Ballroom</strong><br>Old Airport Road, Bengaluru',
+            name: 'Royal Sangeet & Reception',
+            detail: 'Thursday, 25th February 2027 at 7:00 PM<br><strong>The Leela Palace Grand Ballroom</strong><br>Old Airport Road, Bengaluru',
+            mapUrl: 'https://maps.google.com/?q=The+Leela+Palace+Bengaluru',
             venueText: 'The Leela Palace Grand Ballroom, Old Airport Road, Bengaluru',
-            startICS: '20270416T193000',
-            endICS: '20270416T230000',
-            mapUrl: 'https://maps.google.com/?q=The+Leela+Palace+Bengaluru'
+            startICS: '20270225T133000Z',
+            endICS: '20270225T173000Z'
           }
         ],
         gallery: [
           'https://images.unsplash.com/photo-1595407753234-0882f1e77954?auto=format&fit=crop&w=800&q=80',
           'https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=800&q=80',
-          'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80',
-          'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80'
+          'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80'
         ],
-        groomFamily: 'Son of<br><strong>Sri Harishankar Nair</strong><br>&amp; <strong>Smt. Radhika Nair</strong><br>Grandson of Late Sri Madhavan Nair',
-        brideFamily: 'Daughter of<br><strong>Sri Gopalakrishnan</strong><br>&amp; <strong>Smt. Gayathri Krishnan</strong><br>Granddaughter of Sri Sundaram Iyer',
-        relatives: 'Soliciting Your Presence: Nair &amp; Krishnan Families, Elders &amp; Friends'
+        groomFamily: 'Son of<br><strong>Sri Harishankar Nair</strong><br>&amp; <strong>Smt. Sumathi Nair</strong><br>Grandson of Sri Madhavan Nair',
+        brideFamily: 'Daughter of<br><strong>Sri Gopalakrishnan</strong><br>&amp; <strong>Smt. Revathi Krishnan</strong><br>Granddaughter of Sri Sundaram Iyer',
+        relatives: 'With Warm Blessings: Nair &amp; Krishnan Families, Relatives &amp; Dear Friends'
       },
       {
-        id: 'christian-1',
-        category: 'christian',
+        id: 'christian-sapphire',
+        cat: 'christian',
         badge: 'Christian • ₹999',
         title: 'Ivory & Sapphire Holy Matrimony',
-        desc: 'Cross seal 3D doors, Mark 10:9 scripture hero, scratch-card wedding date, St. Mary’s Basilica Secunderabad & Taj Deccan venues, gallery, and family credits.',
+        desc: 'Cross seal 3D doors, scripture hero, scratch-card wedding date, Cathedral & Reception Google Maps buttons, Save the Date, gallery, and family credits.',
         bgMain: '#091326',
         textMain: '#f4f7fc',
         doorBg: 'radial-gradient(circle at center, #14284b 0%, #070f1f 100%)',
         heroGrad: 'linear-gradient(to bottom, rgba(7,15,31,0.5), rgba(9,19,38,0.92))',
-        cardBg: 'rgba(16, 33, 64, 0.88)',
+        cardBg: 'rgba(16, 33, 64, 0.85)',
         sealIcon: '✝️',
         sealTitle: 'HOLY MATRIMONY',
         sealSub: 'Tap Cross Seal to Open',
         heroBg: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1920&q=80',
         verse: '“Therefore what God has joined together, let no one separate.” — Mark 10:9',
         groom: 'Daniel Fernandez',
-        bride: "Hannah D'Souza",
-        inviteLine: 'Together with their parents joyfully invite you to their Wedding &amp; Reception',
+        bride: 'Hannah D\'Souza',
+        inviteLine: 'Together with their parents joyfully invite you to their Wedding & Reception',
         dateDay: 'Saturday',
         dateBig: '14 FEB 2027',
         dateTime: 'Nuptial Mass at 4:00 PM',
@@ -917,20 +917,20 @@
           {
             icon: '⛪',
             name: 'Holy Nuptial Mass',
-            detail: "Saturday, 14th February 2027 at 4:00 PM<br><strong>St. Mary's Basilica Cathedral</strong><br>Secunderabad, Hyderabad, Telangana",
-            venueText: "St. Mary's Basilica Cathedral, Secunderabad, Hyderabad, Telangana",
-            startICS: '20270214T160000',
-            endICS: '20270214T180000',
-            mapUrl: 'https://maps.google.com/?q=St+Marys+Basilica+Secunderabad'
+            detail: 'Saturday, 14th February 2027 at 4:00 PM<br><strong>St. Mary\'s Basilica Cathedral</strong><br>Secunderabad, Hyderabad, Telangana',
+            mapUrl: 'https://maps.google.com/?q=St+Marys+Basilica+Secunderabad',
+            venueText: 'St. Marys Basilica Cathedral, Secunderabad, Hyderabad, Telangana',
+            startICS: '20270214T103000Z',
+            endICS: '20270214T123000Z'
           },
           {
             icon: '🥂',
-            name: 'Dinner &amp; Dance Reception',
+            name: 'Dinner & Dance Reception',
             detail: 'Saturday, 14th February 2027 at 7:30 PM<br><strong>The Crystal Ballroom, Taj Deccan</strong><br>Banjara Hills, Hyderabad',
+            mapUrl: 'https://maps.google.com/?q=Taj+Deccan+Hyderabad',
             venueText: 'The Crystal Ballroom, Taj Deccan, Banjara Hills, Hyderabad',
-            startICS: '20270214T193000',
-            endICS: '20270214T230000',
-            mapUrl: 'https://maps.google.com/?q=Taj+Deccan+Hyderabad'
+            startICS: '20270214T140000Z',
+            endICS: '20270214T173000Z'
           }
         ],
         gallery: [
@@ -940,20 +940,20 @@
           'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80'
         ],
         groomFamily: 'Son of<br><strong>Mr. Joseph Fernandez</strong><br>&amp; <strong>Mrs. Maria Fernandez</strong><br>Grandson of Late Mr. Thomas Fernandez',
-        brideFamily: "Daughter of<br><strong>Mr. Peter D'Souza</strong><br>&amp; <strong>Mrs. Grace D'Souza</strong><br>Granddaughter of Mr. Anthony D'Souza",
-        relatives: "Warmly Invited By: Fernandez &amp; D'Souza Families, Godparents &amp; Friends"
+        brideFamily: 'Daughter of<br><strong>Mr. Peter D\'Souza</strong><br>&amp; <strong>Mrs. Grace D\'Souza</strong><br>Granddaughter of Mr. Anthony D\'Souza',
+        relatives: 'Warmly Invited By: Fernandez &amp; D\'Souza Families, Godparents &amp; Friends'
       },
       {
-        id: 'christian-2',
-        category: 'christian',
+        id: 'christian-velvet',
+        cat: 'christian',
         badge: 'Christian • ₹1,299',
         title: 'Velvet Burgundy & Rose White Vows',
-        desc: 'Romantic burgundy & gold cathedral theme with Dove seal doors, 1 Corinthians 13:7 verse, date scratch card, St. John’s CSI Cathedral & ITC Kakatiya venues, and family hosts.',
+        desc: 'Romantic burgundy & gold cathedral theme with dove doors, date scratch card, church & banquet Google Maps buttons, Save the Date, gallery, and family hosts.',
         bgMain: '#1f0812',
         textMain: '#fdf5f8',
         doorBg: 'radial-gradient(circle at center, #4d122a 0%, #1c060f 100%)',
         heroGrad: 'linear-gradient(to bottom, rgba(28,6,15,0.48), rgba(31,8,18,0.92))',
-        cardBg: 'rgba(58, 14, 32, 0.88)',
+        cardBg: 'rgba(58, 14, 32, 0.85)',
         sealIcon: '🕊️',
         sealTitle: 'SACRED VOWS',
         sealSub: 'Tap Dove Seal to Open',
@@ -961,7 +961,7 @@
         verse: '“Love bears all things, believes all things, hopes all things, endures all things.” — 1 Corinthians 13:7',
         groom: 'Samuel Mathew',
         bride: 'Sharon Thomas',
-        inviteLine: 'Request the pleasure of your company at their Nuptial Blessing &amp; Reception',
+        inviteLine: 'Request the pleasure of your company at their Nuptial Blessing & Reception',
         dateDay: 'Sunday',
         dateBig: '28 FEB 2027',
         dateTime: 'Wedding Service at 4:30 PM',
@@ -969,20 +969,20 @@
           {
             icon: '⛪',
             name: 'Church Wedding Service',
-            detail: "Sunday, 28th February 2027 at 4:30 PM<br><strong>St. John's CSI Cathedral</strong><br>East Marredpally, Secunderabad",
-            venueText: "St. John's CSI Cathedral, East Marredpally, Secunderabad",
-            startICS: '20270228T163000',
-            endICS: '20270228T183000',
-            mapUrl: 'https://maps.google.com/?q=Secunderabad+Telangana'
+            detail: 'Sunday, 28th February 2027 at 4:30 PM<br><strong>St. John\'s CSI Cathedral</strong><br>East Marredpally, Secunderabad',
+            mapUrl: 'https://maps.google.com/?q=Secunderabad+Telangana',
+            venueText: 'St. Johns CSI Cathedral, East Marredpally, Secunderabad',
+            startICS: '20270228T110000Z',
+            endICS: '20270228T130000Z'
           },
           {
             icon: '🎂',
-            name: 'Grand Banquet &amp; Toast',
+            name: 'Grand Banquet & Toast',
             detail: 'Sunday, 28th February 2027 at 7:30 PM<br><strong>ITC Kakatiya Imperial Ballroom</strong><br>Begumpet, Hyderabad',
+            mapUrl: 'https://maps.google.com/?q=ITC+Kakatiya+Hyderabad',
             venueText: 'ITC Kakatiya Imperial Ballroom, Begumpet, Hyderabad',
-            startICS: '20270228T193000',
-            endICS: '20270228T230000',
-            mapUrl: 'https://maps.google.com/?q=ITC+Kakatiya+Hyderabad'
+            startICS: '20270228T140000Z',
+            endICS: '20270228T173000Z'
           }
         ],
         gallery: [
@@ -996,94 +996,91 @@
         relatives: 'Joyfully Invited By: Mathew &amp; Thomas Families, Best Man, Bridesmaids &amp; Friends'
       },
       {
-        id: 'christian-3',
-        category: 'christian',
+        id: 'christian-botanical',
+        cat: 'christian',
         badge: 'Christian • ₹1,499',
         title: 'Olive & Botanical Garden Matrimony',
-        desc: 'Enchanted emerald-olive & champagne gold vineyard theme with Wedding Rings seal doors, Song of Solomon verse, date scratch card, Goa Basilica & Beach Resort venues.',
-        bgMain: '#121c12',
-        textMain: '#f5f8f2',
-        doorBg: 'radial-gradient(circle at center, #293d29 0%, #0d140d 100%)',
-        heroGrad: 'linear-gradient(to bottom, rgba(13,20,13,0.48), rgba(18,28,18,0.92))',
-        cardBg: 'rgba(31, 48, 31, 0.88)',
+        desc: 'Vineyard olive & champagne gold theme with intertwined rings doors, Song of Solomon verse, Goa church & seaside lawn venues, Save the Date, and family hosts.',
+        bgMain: '#141f14',
+        textMain: '#f6faf5',
+        doorBg: 'radial-gradient(circle at center, #2d472d 0%, #0f180f 100%)',
+        heroGrad: 'linear-gradient(to bottom, rgba(15,24,15,0.48), rgba(20,31,20,0.92))',
+        cardBg: 'rgba(34, 54, 34, 0.85)',
         sealIcon: '💍',
         sealTitle: 'TWO BECOME ONE',
         sealSub: 'Tap Rings Seal to Open',
-        heroBg: 'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=1920&q=80',
+        heroBg: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=1920&q=80',
         verse: '“I have found the one whom my soul loves.” — Song of Solomon 3:4',
-        groom: 'Ethan Rodrigues',
-        bride: 'Claire Pereira',
-        inviteLine: 'Joyfully invite you to share in their Nuptial Mass &amp; Sunset Garden Reception',
+        groom: 'Jonathan Rodrigues',
+        bride: 'claire Pereira',
+        inviteLine: 'Joyfully invite you to witness their Exchange of Vows & Garden Reception',
         dateDay: 'Saturday',
-        dateBig: '08 MAY 2027',
-        dateTime: 'Nuptial Blessing at 4:00 PM',
+        dateBig: '06 MAR 2027',
+        dateTime: 'Nuptial Blessing at 4:15 PM',
         events: [
           {
             icon: '⛪',
-            name: 'Nuptial Blessing Ceremony',
-            detail: 'Saturday, 8th May 2027 at 4:00 PM<br><strong>Our Lady of the Immaculate Conception Church</strong><br>Panjim, North Goa',
+            name: 'Seaside Chapel Blessing',
+            detail: 'Saturday, 6th March 2027 at 4:15 PM<br><strong>Our Lady of the Immaculate Conception</strong><br>Panjim, Goa',
+            mapUrl: 'https://maps.google.com/?q=Our+Lady+of+the+Immaculate+Conception+Church+Goa',
             venueText: 'Our Lady of the Immaculate Conception Church, Panjim, Goa',
-            startICS: '20270508T160000',
-            endICS: '20270508T180000',
-            mapUrl: 'https://maps.google.com/?q=Our+Lady+of+the+Immaculate+Conception+Church+Goa'
+            startICS: '20270306T104500Z',
+            endICS: '20270306T124500Z'
           },
           {
             icon: '🌿',
-            name: 'Sunset Garden Dinner &amp; Toast',
-            detail: 'Saturday, 8th May 2027 at 7:00 PM<br><strong>Taj Exotica Seaside Lawn</strong><br>Benaulim, South Goa',
-            venueText: 'Taj Exotica Seaside Lawn, Benaulim, South Goa',
-            startICS: '20270508T190000',
-            endICS: '20270508T230000',
-            mapUrl: 'https://maps.google.com/?q=Taj+Exotica+Resort+Goa'
+            name: 'Sunset Lawn Reception',
+            detail: 'Saturday, 6th March 2027 at 7:00 PM<br><strong>Taj Aguada Heritage Lawns</strong><br>Sinquerim, Candolim, Goa',
+            mapUrl: 'https://maps.google.com/?q=Taj+Fort+Aguada+Resort+Goa',
+            venueText: 'Taj Aguada Heritage Lawns, Sinquerim, Candolim, Goa',
+            startICS: '20270306T133000Z',
+            endICS: '20270306T173000Z'
           }
         ],
         gallery: [
-          'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=800&q=80',
           'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=800&q=80',
           'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80',
-          'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=800&q=80'
+          'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=800&q=80'
         ],
-        groomFamily: 'Son of<br><strong>Mr. Francis Rodrigues</strong><br>&amp; <strong>Mrs. Teresa Rodrigues</strong><br>Grandson of Late Mr. Lawrence Rodrigues',
-        brideFamily: 'Daughter of<br><strong>Mr. Vincent Pereira</strong><br>&amp; <strong>Mrs. Clara Pereira</strong><br>Granddaughter of Mr. Manuel Pereira',
-        relatives: 'With Love &amp; Blessings: Rodrigues &amp; Pereira Families, Godparents &amp; Friends'
+        groomFamily: 'Son of<br><strong>Mr. Francis Rodrigues</strong><br>&amp; <strong>Mrs. Theresa Rodrigues</strong><br>Grandson of Late Mr. Lawrence Rodrigues',
+        brideFamily: 'Daughter of<br><strong>Mr. Dominic Pereira</strong><br>&amp; <strong>Mrs. Angela Pereira</strong><br>Granddaughter of Mr. Sylvester Pereira',
+        relatives: 'With Love &amp; Gratitude: Rodrigues &amp; Pereira Families, Godparents &amp; Friends'
       }
     ];
 
     let activeTemplate = null;
 
-    // Toast notification helper
-    let toastTimer;
     function showToast(msg) {
       const banner = document.getElementById('toastBanner');
       document.getElementById('toastMessage').textContent = msg;
       banner.classList.remove('hidden');
       banner.classList.add('flex');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => {
+      clearTimeout(banner._timer);
+      banner._timer = setTimeout(() => {
         banner.classList.add('hidden');
         banner.classList.remove('flex');
-      }, 3500);
+      }, 3200);
     }
 
-    // Render Template Cards
+    // Render Showcase Cards
     function renderCards(filter = 'all') {
       const grid = document.getElementById('templatesGrid');
-      const items = filter === 'all' ? TEMPLATES : TEMPLATES.filter(t => t.category === filter);
-
-      grid.innerHTML = items.map(tpl => `
-        <article class="rounded-2xl bg-white border border-gold/30 overflow-hidden flex flex-col justify-between hover:border-gold hover:-translate-y-1 transition-all duration-300 shadow-lg shadow-stone-200/80">
+      const filtered = filter === 'all' ? TEMPLATES : TEMPLATES.filter(t => t.cat === filter);
+      grid.innerHTML = filtered.map(tpl => `
+        <article class="tpl-card rounded-2xl bg-white border border-gold/35 overflow-hidden flex flex-col justify-between shadow-lg shadow-stone-200/70 hover:-translate-y-1.5 hover:border-gold transition-all duration-300">
           <div>
             <div class="relative h-56 overflow-hidden cursor-pointer group" onclick="openLivePreview('${tpl.id}')">
               <img src="${tpl.heroBg}" alt="${tpl.title}"
-                   onerror="this.src='https://placehold.co/800x600/faf6f0/8c6214?text=Aurelia+Vows'"
-                   class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent"></div>
-              <span class="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-white/95 border border-gold/50 text-gold-dark text-xs font-semibold backdrop-blur-md shadow-sm">
+                   onerror="this.src='https://placehold.co/800x500/FAF6F0/C59B27?text=Wedding+Invitation'"
+                   class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-transparent"></div>
+              <span class="absolute top-3 left-3 px-3 py-1 rounded-full bg-white/95 border border-gold/50 text-gold-dark text-xs font-bold shadow-sm">
                 ${tpl.badge}
               </span>
-              <div class="absolute bottom-3 left-4 right-4">
-                <div class="font-script text-3xl text-gold-light drop-shadow">${tpl.groom} &amp; ${tpl.bride}</div>
-              </div>
+              <span class="absolute bottom-3 right-3 px-3 py-1 rounded-full bg-gold text-white text-xs font-bold opacity-95 group-hover:scale-105 transition-transform shadow-md">
+                ${tpl.sealIcon} Click to Preview
+              </span>
             </div>
             <div class="p-6 pb-4">
               <h3 class="font-display text-lg font-bold text-[#2C211B] mb-2">${tpl.title}</h3>
