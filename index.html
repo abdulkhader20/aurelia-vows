@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aurelia Vows | Royal Digital Wedding Invitations</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Great+Vibes&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Montserrat"', 'sans-serif'],
+            serif: ['"Cormorant Garamond"', 'serif'],
+            display: ['"Cinzel Decorative"', 'serif'],
+            script: ['"Great Vibes"', 'cursive'],
+          },
+          colors: {
+            gold: {
+              light: '#F3E5AB',
+              DEFAULT: '#C59B27',
+              dark: '#8C6214',
+            },
+            obsidian: '#FAF6F0',
+            cardDark: '#FFFFFF',
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    :root {
+      --gold: #C59B27;
+      --gold-light: #F3E5AB;
+      --gold-dark: #8C6214;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #FAF6F0;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #8C6214, #C59B27);
+      border-radius: 9999px;
+    }
+
+    /* 3D Ornate Doors inside Live Preview Modal */
+    .door-perspective {
+      perspective: 2000px;
+    }
+    .door-panel {
+      width: 50%;
+      height: 100%;
+      position: relative;
+      border: 4px solid var(--gold);
+      box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.85);
+      transition: transform 1.8s cubic-bezier(0.65, 0, 0.35, 1);
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+    .door-left {
+      transform-origin: left center;
+      justify-content: flex-end;
+      border-right: 2px solid var(--gold);
+    }
+    .door-right {
+      transform-origin: right center;
+      justify-content: flex-start;
+      border-left: 2px solid var(--gold);
+    }
+    #door-overlay.opened .door-left {
+      transform: rotateY(-108deg);
+    }
+    #door-overlay.opened .door-right {
+      transform: rotateY(108deg);
+    }
+    #door-overlay {
+      transition: opacity 0.8s ease 1.4s, visibility 0.8s ease 1.4s;
+    }
+    #door-overlay.opened {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    @keyframes pulseSeal {
+      0%, 100% {
+        box-shadow: 0 0 25px rgba(212, 175, 55, 0.5), inset 0 0 15px rgba(212, 175, 55, 0.3);
+      }
+      50% {
+        box-shadow: 0 0 55px rgba(212, 175, 55, 0.95), inset 0 0 25px rgba(212, 175, 55, 0.6);
+      }
+    }
+    .door-seal-btn {
+      animation: pulseSeal 2.2s infinite ease-in-out;
+      transition: transform 0.4s ease, opacity 0.5s ease;
+    }
+    #door-overlay.opened .door-seal-btn {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    @keyframes kenBurns {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.14); }
+    }
+    .animate-ken-burns {
+      animation: kenBurns 22s infinite alternate ease-in-out;
+    }
+
+    @keyframes bounceDown {
+      0%, 100% { transform: translate(-50%, 0); }
+      50% { transform: translate(-50%, -10px); }
+    }
+    .animate-scroll-pill {
+      animation: bounceDown 2s infinite;
+    }
+
+    #scratch-canvas {
+      cursor: grab;
+      touch-action: none;
+      transition: opacity 0.6s ease;
+    }
+    #scratch-canvas:active {
+      cursor: grabbing;
+    }
+  </style>
+</head>
+<body class="bg-obsidian text-[#2C211B] font-sans antialiased overflow-x-hidden">
+
+  <!-- Ambient Floating Golden Particles -->
+  <canvas id="bgParticles" class="fixed inset-0 pointer-events-none z-0 opacity-75"></canvas>
+
+  <!-- Toast Notification Banner (No alert() calls) -->
+  <div id="toastBanner" class="fixed top-5 left-1/2 -translate-x-1/2 z-[12000] hidden items-center gap-3 px-5 py-3 rounded-full bg-white/95 border border-gold/70 text-[#2C211B] shadow-xl backdrop-blur-md">
+    <span class="w-2.5 h-2.5 rounded-full bg-gold animate-ping"></span>
+    <span id="toastMessage" class="text-xs sm:text-sm font-medium">Ready</span>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- 1. STICKY TOP NAVBAR                                                  -->
+  <!-- ===================================================================== -->
+  <nav class="sticky top-0 z-50 bg-[#FAF6F0]/90 backdrop-blur-md border-b border-gold/30 px-4 sm:px-8 py-4">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      <a href="#" class="font-display text-xl sm:text-2xl font-bold text-gold-dark tracking-wider flex items-center gap-2">
+        <span>✨ Aurelia Vows</span>
+      </a>
+
+      <div class="hidden md:flex items-center gap-7 text-sm font-medium text-[#4A3B32]">
+        <a href="#templates" class="hover:text-gold-dark transition-colors">Templates</a>
+        <a href="#pricing" class="hover:text-gold-dark transition-colors">Rates</a>
+        <a href="#enquiry" class="hover:text-gold-dark transition-colors">Enquiry</a>
+      </div>
+
+      <div class="flex items-center gap-2.5">
+        <a href="https://wa.me/917569211459?text=Hello%20Aurelia%20Vows!%20I%20would%20like%20to%20enquire%20about%20a%20digital%20wedding%20invitation."
+           target="_blank" rel="noopener noreferrer"
+           aria-label="Chat on WhatsApp"
+           class="inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-full bg-gradient-to-r from-gold to-gold-dark text-white font-semibold text-xs sm:text-sm hover:-translate-y-0.5 transition-all shadow-lg shadow-gold/25">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12.031 2c-5.516 0-9.969 4.453-9.969 9.969 0 1.758.459 3.475 1.331 4.988L2 22l5.188-1.359a9.93 9.93 0 0 0 4.843 1.258h.004c5.515 0 9.969-4.454 9.969-9.969A9.93 9.93 0 0 0 19.08 4.92 9.908 9.908 0 0 0 12.031 2zm5.822 14.277c-.246.693-1.434 1.326-1.988 1.408-.508.076-1.15.107-1.855-.117-.428-.136-.977-.318-1.68-.621-2.953-1.275-4.883-4.248-5.03-4.445-.148-.197-1.203-1.6-1.203-3.053 0-1.453.762-2.168 1.031-2.463.271-.295.59-.369.787-.369.197 0 .394.002.566.01.182.009.426-.069.666.508.246.59.836 2.041.91 2.189.074.148.123.32.025.516-.098.197-.148.32-.295.492-.148.172-.311.384-.443.516-.148.148-.302.308-.13.603.172.295.765 1.262 1.643 2.044 1.129 1.006 2.08 1.318 2.375 1.465.295.148.467.123.64-.074.172-.197.738-.861.934-1.156.197-.295.394-.246.664-.148.271.098 1.723.812 2.018.96.295.148.492.221.566.344.074.123.074.713-.172 1.406z"/>
+          </svg>
+          <span>WhatsApp</span>
+        </a>
+        <button id="mobileMenuBtn" aria-label="Toggle Menu" class="md:hidden p-2 rounded-xl border border-gold/50 text-gold-dark">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Dropdown -->
+    <div id="mobileMenu" class="hidden md:hidden pt-3 pb-1 space-y-2 border-t border-gold/25 mt-3 text-sm">
+      <a href="#templates" class="block py-1.5 text-[#4A3B32] hover:text-gold-dark">Templates</a>
+      <a href="#pricing" class="block py-1.5 text-[#4A3B32] hover:text-gold-dark">Rates</a>
+      <a href="#enquiry" class="block py-1.5 text-[#4A3B32] hover:text-gold-dark">Enquiry</a>
+    </div>
+  </nav>
+
+  <!-- ===================================================================== -->
+  <!-- 2. HERO SECTION                                                       -->
+  <!-- ===================================================================== -->
+  <header class="relative z-10 py-16 sm:py-24 px-4 sm:px-8 text-center" style="background: radial-gradient(circle at top, rgba(197,155,39,0.22) 0%, rgba(244,234,220,0.4) 45%, transparent 75%);">
+    <div class="max-w-4xl mx-auto">
+      <span class="inline-block px-4 py-1.5 rounded-full bg-gold/15 border border-gold/40 text-gold-dark text-xs uppercase tracking-[0.22em] font-semibold mb-5">
+        Muslim • Hindu • Christian Digital Invitations
+      </span>
+      <h1 class="font-display text-3xl sm:text-5xl lg:text-6xl font-bold text-[#2C211B] leading-tight mb-5">
+        Royal Digital Wedding Invitations
+      </h1>
+      <p class="max-w-2xl mx-auto text-[#5C4B42] text-base sm:text-lg leading-relaxed mb-8">
+        Luxury animated invitations starting at just <strong class="text-gold-dark">₹799</strong> for Muslim, Hindu &amp; Christian weddings — complete with interactive 3D opening doors, scratch-card date reveal, Google Maps venues, photo gallery &amp; family credits.
+      </p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="#templates" class="w-full sm:w-auto px-8 py-3.5 rounded-full bg-gradient-to-r from-gold to-gold-dark text-white font-bold text-sm tracking-wide hover:-translate-y-0.5 transition-all shadow-xl shadow-gold/25">
+          Browse All Templates
+        </a>
+        <a href="#enquiry" class="w-full sm:w-auto px-8 py-3.5 rounded-full bg-white border border-gold text-gold-dark font-semibold text-sm hover:bg-gold/10 transition-all inline-flex items-center justify-center gap-2 shadow-sm">
+          <span>✨ Book Custom Invitation</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================================================================== -->
+  <!-- 3. FILTERABLE TEMPLATE GRID (6 TEMPLATES)                             -->
+  <!-- ===================================================================== -->
+  <section id="templates" class="relative z-10 py-16 px-4 sm:px-8 max-w-7xl mx-auto">
+    <div class="text-center mb-10">
+      <h2 class="font-display text-2xl sm:text-4xl font-bold text-[#2C211B] mb-2">Standalone Wedding Templates</h2>
+      <p class="text-[#6B5A50] text-sm sm:text-base">
+        Click <strong class="text-gold-dark">"Live Preview"</strong> on any template to test the 3D doors, scratch card, Google Maps, gallery &amp; family section right here!
+      </p>
+    </div>
+
+    <!-- Category Filter Bar -->
+    <div class="flex flex-wrap justify-center gap-3 mb-10">
+      <button onclick="filterCards('all', this)" class="filter-btn active px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold bg-gold text-white transition-all shadow-sm">
+        All
+      </button>
+      <button onclick="filterCards('muslim', this)" class="filter-btn px-5 py-2.5 rounded-full text-xs sm:text-sm font-medium bg-white border border-gold/40 text-[#4A3B32] hover:bg-gold hover:text-white transition-all">
+        ☪️ Muslim Nikah
+      </button>
+      <button onclick="filterCards('hindu', this)" class="filter-btn px-5 py-2.5 rounded-full text-xs sm:text-sm font-medium bg-white border border-gold/40 text-[#4A3B32] hover:bg-gold hover:text-white transition-all">
+        🕉️ Hindu Vivah
+      </button>
+      <button onclick="filterCards('christian', this)" class="filter-btn px-5 py-2.5 rounded-full text-xs sm:text-sm font-medium bg-white border border-gold/40 text-[#4A3B32] hover:bg-gold hover:text-white transition-all">
+        ✝️ Christian Nuptials
+      </button>
+    </div>
+
+    <!-- Grid of Templates -->
+    <div id="templatesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7"></div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- 5. AFFORDABLE PACKAGES & RATES (ALL UNDER ₹2,000)                     -->
+  <!-- ===================================================================== -->
+  <section id="pricing" class="relative z-10 py-16 px-4 sm:px-8 max-w-7xl mx-auto border-t border-gold/25">
+    <div class="text-center mb-12">
+      <h2 class="font-display text-2xl sm:text-4xl font-bold text-[#2C211B] mb-2">Affordable Packages (All Under ₹2,000)</h2>
+      <p class="text-[#6B5A50] text-sm sm:text-base">Budget-friendly one-time rates with 24-hour delivery &amp; unlimited guest sharing.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+      <!-- Plan 1: Classic Digital ₹799 -->
+      <div class="rounded-2xl bg-white border border-gold/35 p-8 flex flex-col justify-between text-center shadow-lg shadow-stone-200/70">
+        <div>
+          <h3 class="font-display text-xl font-bold text-[#2C211B]">Classic Digital</h3>
+          <div class="font-display text-4xl font-bold text-gold-dark my-4">₹799</div>
+          <ul class="text-left text-sm text-[#4A3B32] space-y-3 mb-8">
+            <li class="pb-2 border-b border-stone-200">✓ Choice of Muslim, Hindu or Christian Theme</li>
+            <li class="pb-2 border-b border-stone-200">✓ Interactive 3D Opening Doors</li>
+            <li class="pb-2 border-b border-stone-200">✓ Couple Names &amp; Full-Screen Hero</li>
+            <li class="pb-2 border-b border-stone-200">✓ Wedding &amp; Reception Google Maps</li>
+            <li class="pb-2 border-b border-stone-200">✓ Family &amp; Relatives Names Section</li>
+          </ul>
+        </div>
+        <a href="#enquiry" onclick="selectPlan('Classic Digital Package (₹799)')"
+           class="inline-block w-full py-3 rounded-full border border-gold text-gold-dark font-semibold text-sm hover:bg-gold hover:text-white transition-all">
+          Select ₹799 Plan
+        </a>
+      </div>
+
+      <!-- Plan 2: Royal Interactive ₹1,299 (Best Seller) -->
+      <div class="rounded-2xl bg-white border-2 border-gold p-8 flex flex-col justify-between text-center shadow-2xl shadow-gold/20 lg:scale-[1.03]">
+        <div>
+          <span class="inline-block px-3.5 py-1 rounded-full bg-gold/15 text-gold-dark text-xs font-bold tracking-wider mb-3">BEST SELLER</span>
+          <h3 class="font-display text-xl font-bold text-[#2C211B]">Royal Interactive</h3>
+          <div class="font-display text-4xl font-bold text-gold-dark my-4">₹1,299</div>
+          <ul class="text-left text-sm text-[#4A3B32] space-y-3 mb-8">
+            <li class="pb-2 border-b border-stone-200">✓ Everything in Classic Digital</li>
+            <li class="pb-2 border-b border-stone-200">✓ Interactive Foil Scratch Card Date Reveal</li>
+            <li class="pb-2 border-b border-stone-200">✓ Up to 10 Gallery Photos with Lightbox</li>
+            <li class="pb-2 border-b border-stone-200">✓ Door Opening Chime Sound Effect</li>
+            <li class="pb-2 border-b border-stone-200">✓ Shareable Link + Custom QR Code</li>
+          </ul>
+        </div>
+        <a href="#enquiry" onclick="selectPlan('Royal Interactive Package (₹1,299)')"
+           class="inline-block w-full py-3 rounded-full bg-gradient-to-r from-gold to-gold-dark text-white font-bold text-sm hover:brightness-110 transition-all shadow-md">
+          Select ₹1,299 Plan
+        </a>
+      </div>
+
+      <!-- Plan 3: Grand Signature ₹1,799 -->
+      <div class="rounded-2xl bg-white border border-gold/35 p-8 flex flex-col justify-between text-center shadow-lg shadow-stone-200/70">
+        <div>
+          <h3 class="font-display text-xl font-bold text-[#2C211B]">Grand Signature</h3>
+          <div class="font-display text-4xl font-bold text-gold-dark my-4">₹1,799</div>
+          <ul class="text-left text-sm text-[#4A3B32] space-y-3 mb-8">
+            <li class="pb-2 border-b border-stone-200">✓ Everything in Royal Interactive</li>
+            <li class="pb-2 border-b border-stone-200">✓ Extra Events (Haldi / Mehendi / Sangeet)</li>
+            <li class="pb-2 border-b border-stone-200">✓ Up to 20 Photos + Video Embed</li>
+            <li class="pb-2 border-b border-stone-200">✓ Direct WhatsApp RSVP Button</li>
+            <li class="pb-2 border-b border-stone-200">✓ Express Same-Day Delivery</li>
+          </ul>
+        </div>
+        <a href="#enquiry" onclick="selectPlan('Grand Signature Package (₹1,799)')"
+           class="inline-block w-full py-3 rounded-full border border-gold text-gold-dark font-semibold text-sm hover:bg-gold hover:text-white transition-all">
+          Select ₹1,799 Plan
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- 6. ENQUIRY SECTION                                                    -->
+  <!-- ===================================================================== -->
+  <section id="enquiry" class="relative z-10 py-16 px-4 sm:px-8 max-w-4xl mx-auto border-t border-gold/25">
+    <div class="text-center mb-10">
+      <h2 class="font-display text-2xl sm:text-4xl font-bold text-[#2C211B] mb-2">Book Your Invitation</h2>
+      <p class="text-[#6B5A50] text-sm sm:text-base">Send your details directly via WhatsApp or Email for instant customization.</p>
+    </div>
+
+    <div class="rounded-2xl bg-white border border-gold/40 p-6 sm:p-10 shadow-xl shadow-stone-200/80">
+      <div class="space-y-5">
+        <div>
+          <label for="cust-name" class="block text-sm text-[#4A3B32] mb-2 font-semibold">Your Name</label>
+          <input type="text" id="cust-name" placeholder="Enter your full name"
+                 class="w-full px-4 py-3 rounded-xl bg-[#FAF6F0] border border-gold/40 text-[#2C211B] placeholder-stone-400 focus:outline-none focus:border-gold" />
+        </div>
+
+        <div>
+          <label for="cust-tpl" class="block text-sm text-[#4A3B32] mb-2 font-semibold">Select Template / Package</label>
+          <select id="cust-tpl"
+                  class="w-full px-4 py-3 rounded-xl bg-[#FAF6F0] border border-gold/40 text-[#2C211B] focus:outline-none focus:border-gold">
+            <option value="Emerald & Gold Royal Nikah (Muslim • ₹999)">Emerald &amp; Gold Royal Nikah (Muslim • ₹999)</option>
+            <option value="Midnight Sapphire & Pearl Nikah (Muslim • ₹1,299)">Midnight Sapphire &amp; Pearl Nikah (Muslim • ₹1,299)</option>
+            <option value="Desert Rose & Sandstone Palace Nikah (Muslim • ₹1,499)">Desert Rose &amp; Sandstone Palace Nikah (Muslim • ₹1,499)</option>
+            <option value="Sacred Crimson & Gold Vivah (Hindu • ₹999)">Sacred Crimson &amp; Gold Vivah (Hindu • ₹999)</option>
+            <option value="Royal Marigold & Sandalwood Kalyanam (Hindu • ₹1,299)">Royal Marigold &amp; Sandalwood Kalyanam (Hindu • ₹1,299)</option>
+            <option value="Peacock Teal & Temple Gold Vivah (Hindu • ₹1,499)">Peacock Teal &amp; Temple Gold Vivah (Hindu • ₹1,499)</option>
+            <option value="Ivory & Sapphire Holy Matrimony (Christian • ₹999)">Ivory &amp; Sapphire Holy Matrimony (Christian • ₹999)</option>
+            <option value="Velvet Burgundy & Rose White Vows (Christian • ₹1,299)">Velvet Burgundy &amp; Rose White Vows (Christian • ₹1,299)</option>
+            <option value="Olive & Botanical Garden Matrimony (Christian • ₹1,499)">Olive &amp; Botanical Garden Matrimony (Christian • ₹1,499)</option>
+            <option value="Classic Digital Package (₹799)">Classic Digital Package (₹799)</option>
+            <option value="Royal Interactive Package (₹1,299)">Royal Interactive Package (₹1,299)</option>
+            <option value="Grand Signature Package (₹1,799)">Grand Signature Package (₹1,799)</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="cust-msg" class="block text-sm text-[#4A3B32] mb-2 font-semibold">Wedding Date &amp; Notes</label>
+          <textarea id="cust-msg" rows="3" placeholder="Share groom & bride names, wedding date, and venue city..."
+                    class="w-full px-4 py-3 rounded-xl bg-[#FAF6F0] border border-gold/40 text-[#2C211B] placeholder-stone-400 focus:outline-none focus:border-gold"></textarea>
+        </div>
+
+        <div class="flex flex-wrap gap-3 pt-2">
+          <button type="button" onclick="sendWhatsApp()"
+                  class="flex-1 min-w-[210px] py-3.5 px-6 rounded-full bg-gradient-to-r from-gold to-gold-dark text-white font-bold text-sm hover:-translate-y-0.5 transition-all shadow-lg inline-flex items-center justify-center gap-2">
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 1.856.001 3.598.723 4.907 2.034 1.31 1.311 2.031 3.054 2.03 4.908-.001 3.825-3.113 6.938-6.937 6.938z"/>
+            </svg>
+            <span>Send Enquiry on WhatsApp</span>
+          </button>
+          <button type="button" onclick="sendEmail()"
+                  class="flex-1 min-w-[180px] py-3.5 px-6 rounded-full border border-gold text-gold-dark font-semibold text-sm hover:bg-gold/10 transition-all">
+            ✉️ Send via Email
+          </button>
+        </div>
+
+        <div class="text-center pt-5 border-t border-stone-200 text-xs sm:text-sm text-[#6B5A50] flex flex-wrap items-center justify-center gap-3">
+          <a href="https://wa.me/917569211459" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp"
+             class="inline-flex items-center gap-1.5 text-gold-dark font-semibold hover:underline">
+            <svg class="w-4 h-4 fill-current text-[#25D366]" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12.031 2c-5.516 0-9.969 4.453-9.969 9.969 0 1.758.459 3.475 1.331 4.988L2 22l5.188-1.359a9.93 9.93 0 0 0 4.843 1.258h.004c5.515 0 9.969-4.454 9.969-9.969A9.93 9.93 0 0 0 19.08 4.92 9.908 9.908 0 0 0 12.031 2zm5.822 14.277c-.246.693-1.434 1.326-1.988 1.408-.508.076-1.15.107-1.855-.117-.428-.136-.977-.318-1.68-.621-2.953-1.275-4.883-4.248-5.03-4.445-.148-.197-1.203-1.6-1.203-3.053 0-1.453.762-2.168 1.031-2.463.271-.295.59-.369.787-.369.197 0 .394.002.566.01.182.009.426-.069.666.508.246.59.836 2.041.91 2.189.074.148.123.32.025.516-.098.197-.148.32-.295.492-.148.172-.311.384-.443.516-.148.148-.302.308-.13.603.172.295.765 1.262 1.643 2.044 1.129 1.006 2.08 1.318 2.375 1.465.295.148.467.123.64-.074.172-.197.738-.861.934-1.156.197-.295.394-.246.664-.148.271.098 1.723.812 2.018.96.295.148.492.221.566.344.074.123.074.713-.172 1.406z"/>
+            </svg>
+            <span>WhatsApp Chat</span>
+          </a>
+          <span>|</span>
+          <span>Email: <a href="mailto:mohammadabdulkhader20@gmail.com" class="text-gold-dark font-semibold hover:underline">mohammadabdulkhader20@gmail.com</a></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Business Footer -->
+  <footer class="relative z-10 border-t border-gold/25 py-8 px-4 text-center text-xs sm:text-sm text-[#6B5A50] pb-24 sm:pb-10">
+    <p class="inline-flex flex-wrap items-center justify-center gap-2">
+      <span>© 2026 <strong class="text-gold-dark">Aurelia Vows</strong> Digital Wedding Studio</span>
+      <span>•</span>
+      <a href="https://wa.me/917569211459" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="inline-flex items-center gap-1 text-gold-dark font-medium hover:underline">
+        <svg class="w-4 h-4 fill-current text-[#25D366]" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12.031 2c-5.516 0-9.969 4.453-9.969 9.969 0 1.758.459 3.475 1.331 4.988L2 22l5.188-1.359a9.93 9.93 0 0 0 4.843 1.258h.004c5.515 0 9.969-4.454 9.969-9.969A9.93 9.93 0 0 0 19.08 4.92 9.908 9.908 0 0 0 12.031 2zm5.822 14.277c-.246.693-1.434 1.326-1.988 1.408-.508.076-1.15.107-1.855-.117-.428-.136-.977-.318-1.68-.621-2.953-1.275-4.883-4.248-5.03-4.445-.148-.197-1.203-1.6-1.203-3.053 0-1.453.762-2.168 1.031-2.463.271-.295.59-.369.787-.369.197 0 .394.002.566.01.182.009.426-.069.666.508.246.59.836 2.041.91 2.189.074.148.123.32.025.516-.098.197-.148.32-.295.492-.148.172-.311.384-.443.516-.148.148-.302.308-.13.603.172.295.765 1.262 1.643 2.044 1.129 1.006 2.08 1.318 2.375 1.465.295.148.467.123.64-.074.172-.197.738-.861.934-1.156.197-.295.394-.246.664-.148.271.098 1.723.812 2.018.96.295.148.492.221.566.344.074.123.074.713-.172 1.406z"/>
+        </svg>
+        <span>WhatsApp</span>
+      </a>
+      <span>•</span>
+      <a href="mailto:mohammadabdulkhader20@gmail.com" class="text-gold-dark font-medium hover:underline">mohammadabdulkhader20@gmail.com</a>
+    </p>
+  </footer>
+
+  <!-- Floating WhatsApp Logo Quick Button (Icon Only - No Phone Number) -->
+  <a href="https://wa.me/917569211459?text=Hello%20Aurelia%20Vows!%20I%20want%20to%20order%20a%20digital%20wedding%20invitation."
+     target="_blank" rel="noopener noreferrer"
+     aria-label="Chat on WhatsApp"
+     title="Chat on WhatsApp"
+     class="fixed bottom-5 right-5 z-40 w-14 h-14 rounded-full bg-[#25D366] text-white shadow-2xl hover:scale-110 transition-transform flex items-center justify-center">
+    <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12.031 2c-5.516 0-9.969 4.453-9.969 9.969 0 1.758.459 3.475 1.331 4.988L2 22l5.188-1.359a9.93 9.93 0 0 0 4.843 1.258h.004c5.515 0 9.969-4.454 9.969-9.969A9.93 9.93 0 0 0 19.08 4.92 9.908 9.908 0 0 0 12.031 2zm5.822 14.277c-.246.693-1.434 1.326-1.988 1.408-.508.076-1.15.107-1.855-.117-.428-.136-.977-.318-1.68-.621-2.953-1.275-4.883-4.248-5.03-4.445-.148-.197-1.203-1.6-1.203-3.053 0-1.453.762-2.168 1.031-2.463.271-.295.59-.369.787-.369.197 0 .394.002.566.01.182.009.426-.069.666.508.246.59.836 2.041.91 2.189.074.148.123.32.025.516-.098.197-.148.32-.295.492-.148.172-.311.384-.443.516-.148.148-.302.308-.13.603.172.295.765 1.262 1.643 2.044 1.129 1.006 2.08 1.318 2.375 1.465.295.148.467.123.64-.074.172-.197.738-.861.934-1.156.197-.295.394-.246.664-.148.271.098 1.723.812 2.018.96.295.148.492.221.566.344.074.123.074.713-.172 1.406z"/>
+    </svg>
+  </a>
+
+  <!-- ===================================================================== -->
+  <!-- 4. FULL-SCREEN INTERACTIVE LIVE TEMPLATE PREVIEW MODAL                -->
+  <!-- ===================================================================== -->
+  <div id="previewModal" class="fixed inset-0 z-[9000] hidden overflow-y-auto overflow-x-hidden">
+    <!-- Floating Top Controls Bar -->
+    <div class="fixed top-4 left-4 right-4 z-[10005] flex items-center justify-between pointer-events-none">
+      <button onclick="replayDoors()"
+              class="pointer-events-auto px-4 py-2 rounded-full bg-black/75 border border-gold/60 text-gold-light text-xs font-semibold backdrop-blur-md hover:bg-black transition-all shadow-lg">
+        🚪 Replay 3D Doors
+      </button>
+      <button onclick="closeLivePreview()"
+              class="pointer-events-auto px-5 py-2.5 rounded-full bg-black/85 border border-gold text-gold-light text-xs sm:text-sm font-bold backdrop-blur-md hover:bg-gold hover:text-obsidian transition-all shadow-2xl">
+        ✕ Close Preview
+      </button>
+    </div>
+
+    <!-- STAGE 1: INTERACTIVE 3D DOUBLE DOORS OVERLAY -->
+    <div id="door-overlay" class="fixed inset-0 z-[9999] flex door-perspective">
+      <div id="door-left" class="door-panel door-left">
+        <div class="absolute inset-4 border-2 border-gold/50 pointer-events-none" style="background-image: radial-gradient(circle at center, rgba(212,175,55,0.14) 0%, transparent 70%);"></div>
+      </div>
+      <div id="door-right" class="door-panel door-right">
+        <div class="absolute inset-4 border-2 border-gold/50 pointer-events-none" style="background-image: radial-gradient(circle at center, rgba(212,175,55,0.14) 0%, transparent 70%);"></div>
+      </div>
+      <button onclick="openDoors()"
+              class="door-seal-btn absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[10000] w-40 h-40 sm:w-44 sm:h-44 rounded-full border-[3px] border-gold text-gold-light cursor-pointer flex flex-col items-center justify-center text-center p-3 hover:scale-105"
+              style="background: radial-gradient(circle, #2a1f10 0%, #0d0905 100%);">
+        <span id="modal-seal-icon" class="text-3xl mb-1">☪️</span>
+        <span id="modal-seal-title" class="font-display text-xs tracking-[2px] font-bold text-gold">BISMILLAH</span>
+        <span id="modal-seal-sub" class="text-[10px] uppercase tracking-[1.5px] mt-1 opacity-85">Tap Seal to Open</span>
+      </button>
+    </div>
+
+    <!-- MODAL SCROLLABLE INVITATION CONTENT -->
+    <div id="modal-theme-root" class="min-h-screen w-full relative">
+      <!-- STAGE 2: FULL-SCREEN HERO WITH KEN BURNS BACKGROUND & SCROLL DOWN BUTTON -->
+      <header class="relative h-screen w-full flex flex-col items-center justify-center text-center overflow-hidden px-4">
+        <div id="modal-hero-bg" class="absolute inset-0 bg-cover bg-center animate-ken-burns z-0"></div>
+        <div id="modal-hero-overlay" class="absolute inset-0 z-[1]"></div>
+
+        <div class="relative z-[2] max-w-3xl px-6 py-9 sm:px-10 sm:py-12 border border-gold/45 bg-black/50 backdrop-blur-md rounded-2xl shadow-2xl">
+          <p id="modal-verse" class="font-serif text-lg sm:text-2xl italic text-gold-light mb-3 tracking-wide"></p>
+          <h1 class="font-script text-5xl sm:text-7xl lg:text-8xl text-gold drop-shadow-[0_4px_25px_rgba(0,0,0,0.85)] leading-tight my-3">
+            <span id="modal-groom"></span>
+            <span class="font-serif text-[0.65em] text-white mx-2">&amp;</span>
+            <span id="modal-bride"></span>
+          </h1>
+          <p id="modal-invite-line" class="font-display text-xs sm:text-base tracking-[3px] uppercase text-[#f4ece1] mt-3"></p>
+        </div>
+
+        <button onclick="scrollToScratch()"
+                class="animate-scroll-pill absolute bottom-7 left-1/2 z-[3] text-gold-light bg-black/75 border border-gold px-6 py-3 rounded-full text-xs sm:text-sm tracking-[1.5px] font-medium inline-flex items-center gap-2 shadow-xl hover:bg-gold hover:text-obsidian transition-colors">
+          Scroll Down 👇
+        </button>
+      </header>
+
+      <!-- STAGE 3: INTERACTIVE HTML5 CANVAS GOLDEN FOIL SCRATCH CARD -->
+      <section id="modal-scratch-section" class="relative z-[2] py-20 px-4 max-w-5xl mx-auto">
+        <div class="text-center mb-10">
+          <span class="text-xs tracking-[3.5px] uppercase text-gold block mb-2">Save The Date</span>
+          <h2 class="font-display text-2xl sm:text-4xl text-gold-light">Scratch To Reveal</h2>
+          <div class="w-28 h-0.5 mx-auto mt-4" style="background: linear-gradient(90deg, transparent, #D4AF37, transparent);"></div>
+        </div>
+
+        <div id="modal-scratch-card" class="max-w-md mx-auto border-2 border-gold rounded-2xl p-6 sm:p-7 text-center shadow-2xl">
+          <p class="text-xs sm:text-sm text-[#e5d8c5]">Rub the golden foil below with your finger or mouse to uncover our wedding date</p>
+          <div class="relative w-full h-52 my-5 rounded-xl overflow-hidden border-2 border-dashed border-gold flex flex-col items-center justify-center select-none"
+               style="background: radial-gradient(circle, #2c1e0f 0%, #140d06 100%);">
+            <div class="p-4 z-[1]">
+              <div id="modal-date-day" class="text-xs sm:text-sm tracking-[3px] text-gold uppercase"></div>
+              <div id="modal-date-big" class="font-display text-2xl sm:text-3xl font-bold text-white my-2"></div>
+              <div id="modal-date-time" class="font-serif text-lg sm:text-xl text-gold-light"></div>
+            </div>
+            <canvas id="scratch-canvas" class="absolute inset-0 w-full h-full z-[2]"></canvas>
+          </div>
+          <div class="flex flex-wrap items-center justify-center gap-2.5">
+            <button onclick="revealAllScratch()"
+                    class="px-5 py-2.5 rounded-full border border-gold text-gold-light text-xs tracking-wider hover:bg-gold hover:text-obsidian transition-all">
+              Instant Reveal ✨
+            </button>
+            <button onclick="downloadSaveTheDate(0)"
+                    class="px-5 py-2.5 rounded-full bg-gradient-to-r from-gold to-gold-dark text-obsidian font-semibold text-xs tracking-wider hover:brightness-110 transition-all shadow-md">
+              📅 Save the Date
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- STAGE 4: WEDDING & RECEPTION WITH GOOGLE MAPS & SAVE THE DATE BUTTONS -->
+      <section class="relative z-[2] py-20 px-4 max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+          <span class="text-xs tracking-[3.5px] uppercase text-gold block mb-2">When &amp; Where</span>
+          <h2 class="font-display text-2xl sm:text-4xl text-gold-light">Wedding &amp; Reception</h2>
+          <div class="w-28 h-0.5 mx-auto mt-4" style="background: linear-gradient(90deg, transparent, #D4AF37, transparent);"></div>
+        </div>
+
+        <div id="modal-events-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
+      </section>
+
+      <!-- STAGE 5: 4-PHOTO GALLERY WITH LIGHTBOX -->
+      <section class="relative z-[2] py-20 px-4 max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+          <span class="text-xs tracking-[3.5px] uppercase text-gold block mb-2">Captured Moments</span>
+          <h2 class="font-display text-2xl sm:text-4xl text-gold-light">Our Gallery</h2>
+          <div class="w-28 h-0.5 mx-auto mt-4" style="background: linear-gradient(90deg, transparent, #D4AF37, transparent);"></div>
+        </div>
+
+        <div id="modal-gallery-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+      </section>
+
+      <!-- STAGE 6: OUR FAMILIES SECTION AT THE BOTTOM -->
+      <section class="relative z-[2] py-20 px-4 max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+          <span class="text-xs tracking-[3.5px] uppercase text-gold block mb-2">With Love &amp; Blessings</span>
+          <h2 class="font-display text-2xl sm:text-4xl text-gold-light">Our Families</h2>
+          <div class="w-28 h-0.5 mx-auto mt-4" style="background: linear-gradient(90deg, transparent, #D4AF37, transparent);"></div>
+        </div>
+
+        <div id="modal-family-box" class="border border-gold/50 rounded-2xl p-7 sm:p-10 text-center">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+            <div>
+              <h4 class="font-display text-gold text-lg sm:text-xl mb-3">Groom's Family</h4>
+              <p id="modal-groom-family" class="font-serif text-lg sm:text-xl leading-relaxed text-[#f3ece1]"></p>
+            </div>
+            <div>
+              <h4 class="font-display text-gold text-lg sm:text-xl mb-3">Bride's Family</h4>
+              <p id="modal-bride-family" class="font-serif text-lg sm:text-xl leading-relaxed text-[#f3ece1]"></p>
+            </div>
+          </div>
+          <div id="modal-relatives" class="mt-7 pt-5 border-t border-gold/25 font-serif text-base sm:text-lg text-gold-light"></div>
+        </div>
+
+        <!-- Quick Order CTA inside Modal Footer -->
+        <div class="mt-10 flex flex-wrap items-center justify-center gap-3">
+          <button onclick="orderActiveTemplate()"
+                  class="px-8 py-3.5 rounded-full bg-gradient-to-r from-gold to-gold-dark text-obsidian font-bold text-sm shadow-xl hover:brightness-110 transition-all">
+            ✨ Book This Template Now
+          </button>
+        </div>
+      </section>
+
+      <footer class="relative z-[2] text-center py-8 px-4 border-t border-gold/25 text-xs sm:text-sm text-[#bcae99]">
+        <p class="inline-flex flex-wrap items-center justify-center gap-2">
+          <span>Crafted with ❤️ by <strong class="text-gold">Aurelia Vows Digital Invitations</strong></span>
+          <span>•</span>
+          <a href="https://wa.me/917569211459" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="inline-flex items-center gap-1 text-gold hover:underline">
+            <svg class="w-4 h-4 fill-current text-[#25D366]" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12.031 2c-5.516 0-9.969 4.453-9.969 9.969 0 1.758.459 3.475 1.331 4.988L2 22l5.188-1.359a9.93 9.93 0 0 0 4.843 1.258h.004c5.515 0 9.969-4.454 9.969-9.969A9.93 9.93 0 0 0 19.08 4.92 9.908 9.908 0 0 0 12.031 2zm5.822 14.277c-.246.693-1.434 1.326-1.988 1.408-.508.076-1.15.107-1.855-.117-.428-.136-.977-.318-1.68-.621-2.953-1.275-4.883-4.248-5.03-4.445-.148-.197-1.203-1.6-1.203-3.053 0-1.453.762-2.168 1.031-2.463.271-.295.59-.369.787-.369.197 0 .394.002.566.01.182.009.426-.069.666.508.246.59.836 2.041.91 2.189.074.148.123.32.025.516-.098.197-.148.32-.295.492-.148.172-.311.384-.443.516-.148.148-.302.308-.13.603.172.295.765 1.262 1.643 2.044 1.129 1.006 2.08 1.318 2.375 1.465.295.148.467.123.64-.074.172-.197.738-.861.934-1.156.197-.295.394-.246.664-.148.271.098 1.723.812 2.018.96.295.148.492.221.566.344.074.123.074.713-.172 1.406z"/>
+            </svg>
+            <span>WhatsApp</span>
+          </a>
+          <span>•</span>
+          <a href="mailto:mohammadabdulkhader20@gmail.com" class="text-gold hover:underline">mohammadabdulkhader20@gmail.com</a>
+        </p>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Lightbox for Gallery Images -->
+  <div id="lightbox" onclick="closeLightbox()" class="fixed inset-0 bg-black/95 z-[11000] hidden items-center justify-center p-4">
+    <button aria-label="Close Photo" class="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/15 text-white text-lg flex items-center justify-center hover:bg-gold hover:text-obsidian">✕</button>
+    <img id="lightbox-img" src="" alt="Wedding Memory Preview" class="max-w-[92%] max-h-[88vh] border-2 border-gold rounded-xl shadow-2xl" />
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- JAVASCRIPT DATA & INTERACTIVE LOGIC                                   -->
+  <!-- ===================================================================== -->
+  <script>
+    const TEMPLATES = [
+      {
+        id: 'muslim-1',
+        category: 'muslim',
+        badge: 'Muslim • ₹999',
+        title: 'Emerald & Gold Royal Nikah',
+        desc: 'Crescent seal 3D doors, Surah An-Naba verse full-screen hero, golden foil scratch card, Falaknuma & Banjara Hills venues, gallery, and family hosts.',
+        bgMain: '#061c14',
+        textMain: '#f4efe6',
+        doorBg: 'radial-gradient(circle at center, #0e3b2b 0%, #04140e 100%)',
+        heroGrad: 'linear-gradient(to bottom, rgba(4,20,14,0.55), rgba(6,28,20,0.92))',
+        cardBg: 'rgba(11, 43, 31, 0.88)',
+        sealIcon: '☪️',
+        sealTitle: 'BISMILLAH',
+        sealSub: 'Tap Seal to Open',
+        heroBg: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1920&q=80',
+        verse: '“And We created you in pairs” — Surah An-Naba (78:8)',
+        groom: 'Zayan Ahmed',
+        bride: 'Aayat Siddiqui',
+        inviteLine: 'Request the honour of your presence at their Nikah & Walima',
+        dateDay: 'Sunday',
+        dateBig: '20 DEC 2026',
+        dateTime: 'Nikah at 11:30 AM • Lunch Follows',
+        events: [
+          {
+            icon: '🕌',
+            name: 'Nikah Ceremony',
+            detail: 'Sunday, 20th December 2026 at 11:30 AM<br><strong>Falaknuma Royal Palace Banquet</strong><br>Engine Bowli, Falaknuma, Hyderabad, Telangana',
+            venueText: 'Falaknuma Royal Palace Banquet, Engine Bowli, Falaknuma, Hyderabad, Telangana',
+            startICS: '20261220T113000',
+            endICS: '20261220T143000',
+            mapUrl: 'https://maps.google.com/?q=Taj+Falaknuma+Palace+Hyderabad'
+          },
+          {
+            icon: '✨',
+            name: 'Dawat-e-Walima',
+            detail: 'Monday, 21st December 2026 at 7:30 PM<br><strong>Nizam Grand Convention Hall</strong><br>Banjara Hills Road No. 12, Hyderabad',
+            venueText: 'Nizam Grand Convention Hall, Banjara Hills Road No. 12, Hyderabad',
+            startICS: '20261221T193000',
+            endICS: '20261221T223000',
+            mapUrl: 'https://maps.google.com/?q=Banjara+Hills+Hyderabad'
+          }
+        ],
+        gallery: [
+          'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=800&q=80'
+        ],
+        groomFamily: 'Son of<br><strong>Janab Farooq Ahmed Sahab</strong><br>&amp; <strong>Mohtarma Nazneen Begum</strong><br>Grandson of Late Haji Abdul Kareem',
+        brideFamily: 'Daughter of<br><strong>Janab Imran Siddiqui Sahab</strong><br>&amp; <strong>Mohtarma Shabana Siddiqui</strong><br>Granddaughter of Janab Rashid Ali',
+        relatives: 'With Best Compliments From: Siddiqui &amp; Ahmed Families, Brothers, Sisters &amp; Dear Friends'
+      },
+      {
+        id: 'muslim-2',
+        category: 'muslim',
+        badge: 'Muslim • ₹1,299',
+        title: 'Midnight Sapphire & Pearl Nikah',
+        desc: 'Lantern-lit royal midnight blue theme with crescent moon seal 3D doors, date scratch card, Charminar & Jubilee Hills Google Maps, and family hosts.',
+        bgMain: '#070e1c',
+        textMain: '#f4efe6',
+        doorBg: 'radial-gradient(circle at center, #112447 0%, #050a14 100%)',
+        heroGrad: 'linear-gradient(to bottom, rgba(5,10,20,0.5), rgba(7,14,28,0.92))',
+        cardBg: 'rgba(14, 28, 56, 0.88)',
+        sealIcon: '🌙',
+        sealTitle: 'NIKAH MUBARAK',
+        sealSub: 'Tap Crescent to Open',
+        heroBg: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=1920&q=80',
+        verse: '“May Allah bless you both and unite you in goodness” — Sunan Abi Dawud',
+        groom: 'Ayaan Mirza',
+        bride: 'Zoya Qureshi',
+        inviteLine: 'Cordially invite you to grace their Nikah & Walima Reception',
+        dateDay: 'Saturday',
+        dateBig: '09 JAN 2027',
+        dateTime: 'Nikah at 12:00 PM • Walima Dinner 8:00 PM',
+        events: [
+          {
+            icon: '🕌',
+            name: 'Nikah Ceremony',
+            detail: 'Saturday, 9th January 2027 at 12:00 PM<br><strong>Mecca Masjid Royal Courtyard</strong><br>Charminar, Hyderabad, Telangana',
+            venueText: 'Mecca Masjid Royal Courtyard, Charminar, Hyderabad, Telangana',
+            startICS: '20270109T120000',
+            endICS: '20270109T150000',
+            mapUrl: 'https://maps.google.com/?q=Charminar+Hyderabad'
+          },
+          {
+            icon: '🥂',
+            name: 'Walima Reception',
+            detail: 'Sunday, 10th January 2027 at 8:00 PM<br><strong>Kohinoor Imperial Convention</strong><br>Jubilee Hills, Hyderabad',
+            venueText: 'Kohinoor Imperial Convention, Jubilee Hills, Hyderabad',
+            startICS: '20270110T200000',
+            endICS: '20270110T230000',
+            mapUrl: 'https://maps.google.com/?q=Jubilee+Hills+Hyderabad'
+          }
+        ],
+        gallery: [
+          'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80'
+        ],
+        groomFamily: 'Son of<br><strong>Janab Tariq Mirza Sahab</strong><br>&amp; <strong>Mohtarma Rukhsar Mirza</strong><br>Grandson of Janab Yousuf Mirza',
+        brideFamily: 'Daughter of<br><strong>Janab Salman Qureshi Sahab</strong><br>&amp; <strong>Mohtarma Samina Qureshi</strong><br>Granddaughter of Haji Ismail Qureshi',
+        relatives: 'With Warm Regards: Mirza &amp; Qureshi Families, Uncles, Aunts &amp; Cousins'
+      },
+      {
+        id: 'muslim-3',
+        category: 'muslim',
+        badge: 'Muslim • ₹1,499',
+        title: 'Desert Rose & Sandstone Palace Nikah',
+        desc: 'Warm Mughal rosewood & antique brass theme with lantern seal 3D doors, Surah Ar-Rum verse, golden scratch card, Chowmahalla & Golconda venues, and family hosts.',
+        bgMain: '#261015',
+        textMain: '#fdf3f0',
+        doorBg: 'radial-gradient(circle at center, #592330 0%, #210b10 100%)',
+        heroGrad: 'linear-gradient(to bottom, rgba(33,11,16,0.48), rgba(38,16,21,0.92))',
+        cardBg: 'rgba(68, 26, 36, 0.88)',
+        sealIcon: '🕌',
+        sealTitle: 'QUBOOL HAI',
+        sealSub: 'Tap Palace Seal to Open',
+        heroBg: 'https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=1920&q=80',
+        verse: '“And He placed between you affection and mercy” — Surah Ar-Rum (30:21)',
+        groom: 'Rehan Baig',
+        bride: 'Mehwish Sultana',
+        inviteLine: 'Solicit your presence &amp; duas at their auspicious Nikah &amp; Walima',
+        dateDay: 'Sunday',
+        dateBig: '21 MAR 2027',
+        dateTime: 'Nikah at 11:45 AM • Royal Dastarkhwan',
+        events: [
+          {
+            icon: '🕌',
+            name: 'Nikah-e-Khas',
+            detail: 'Sunday, 21st March 2027 at 11:45 AM<br><strong>Chowmahalla Palace Durbar Hall</strong><br>Khilwat, Motigalli, Hyderabad',
+            venueText: 'Chowmahalla Palace Durbar Hall, Khilwat, Hyderabad',
+            startICS: '20270321T114500',
+            endICS: '20270321T143000',
+            mapUrl: 'https://maps.google.com/?q=Chowmahalla+Palace+Hyderabad'
+          },
+          {
+            icon: '✨',
+            name: 'Jashn-e-Walima',
+            detail: 'Monday, 22nd March 2027 at 8:00 PM<br><strong>Golconda Resorts &amp; Royal Lawns</strong><br>Gandipet, Hyderabad',
+            venueText: 'Golconda Resorts & Royal Lawns, Gandipet, Hyderabad',
+            startICS: '20270322T200000',
+            endICS: '20270322T230000',
+            mapUrl: 'https://maps.google.com/?q=Golkonda+Resorts+and+Spa+Hyderabad'
+          }
+        ],
+        gallery: [
+          'https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=800&q=80'
+        ],
+        groomFamily: 'Son of<br><strong>Janab Aslam Baig Sahab</strong><br>&amp; <strong>Mohtarma Parveen Begum</strong><br>Grandson of Late Janab Akram Baig',
+        brideFamily: 'Daughter of<br><strong>Janab Nadeemuddin Sahab</strong><br>&amp; <strong>Mohtarma Farhana Sultana</strong><br>Granddaughter of Haji Qamaruddin',
+        relatives: 'With Warmest Duas: Baig &amp; Siddiqui Families, Elders &amp; Friends'
+      },
+      {
+        id: 'hindu-1',
+        category: 'hindu',
+        badge: 'Hindu • ₹999',
+        title: 'Sacred Crimson & Gold Vivah',
+        desc: 'Om & Kalash seal 3D doors, Sanskrit mantra hero, scratch-to-reveal Muhurtham date, Tirupati & Rajahmundry venues, gallery, and family elders.',
+        bgMain: '#240509',
+        textMain: '#fdf5eb',
+        doorBg: 'radial-gradient(circle at center, #5c0b16 0%, #240408 100%)',
+        heroGrad: 'linear-gradient(to bottom, rgba(36,4,8,0.5), rgba(36,5,9,0.92))',
+        cardBg: 'rgba(68, 10, 18, 0.88)',
+        sealIcon: '🕉️',
+        sealTitle: 'SHUBH VIVAH',
+        sealSub: 'Tap Kalash Seal to Open',
+        heroBg: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=1920&q=80',
+        verse: '॥ श्री गणेशाय नमः ॥ Mangalam Bhagavan Vishnu, Mangalam Garudadhwaja',
+        groom: 'Aarav Sharma',
+        bride: 'Ananya Iyer',
+        inviteLine: 'Solicit your gracious presence and blessings on their Sacred Union',
+        dateDay: 'Friday',
+        dateBig: '15 JAN 2027',
+        dateTime: 'Subha Muhurtham at 10:15 AM',
+        events: [
+          {
+            icon: '🔥',
+            name: 'Subha Muhurtham (Vivah)',
+            detail: 'Friday, 15th January 2027 at 10:15 AM<br><strong>Sri Padmavathi Kalyana Mandapam</strong><br>Tiruchanur Road, Tirupati, Andhra Pradesh',
+            venueText: 'Sri Padmavathi Kalyana Mandapam, Tiruchanur Road, Tirupati, Andhra Pradesh',
+            startICS: '20270115T101500',
+            endICS: '20270115T133000',
+            mapUrl: 'https://maps.google.com/?q=Tirupati+Andhra+Pradesh'
+          },
+          {
+            icon: '🪔',
+            name: 'Grand Wedding Reception',
+            detail: 'Saturday, 16th January 2027 at 7:00 PM<br><strong>Grand Lotus Convention Centre</strong><br>Rajahmundry, Andhra Pradesh',
+            venueText: 'Grand Lotus Convention Centre, Rajahmundry, Andhra Pradesh',
+            startICS: '20270116T190000',
+            endICS: '20270116T223000',
+            mapUrl: 'https://maps.google.com/?q=Rajahmundry+Andhra+Pradesh'
+          }
+        ],
+        gallery: [
+          'https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1595407753234-0882f1e77954?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80'
+        ],
+        groomFamily: 'Son of<br><strong>Sri Rajeshwar Sharma</strong><br>&amp; <strong>Smt. Kavitha Sharma</strong><br>Grandson of Sri Viswanath Sharma',
+        brideFamily: 'Daughter of<br><strong>Sri Subramanian Iyer</strong><br>&amp; <strong>Smt. Meenakshi Iyer</strong><br>Granddaughter of Sri Narayanan Iyer',
+        relatives: 'Invited By: Sharma &amp; Iyer Families, Elders, Cousins &amp; Well-Wishers'
+      },
+      {
+        id: 'hindu-2',
+        category: 'hindu',
+        badge: 'Hindu • ₹1,299',
+        title: 'Royal Marigold & Sandalwood Kalyanam',
+        desc: 'Warm saffron & temple bronze South Indian wedding theme with Lotus seal doors, Muhurtham scratch card, Annavaram & Visakhapatnam venues, and family names.',
+        bgMain: '#261204',
+        textMain: '#fff8ee',
+        doorBg: 'radial-gradient(circle at center, #6b340a 0%, #291203 100%)',
+        heroGrad: 'linear-gradient(to bottom, rgba(41,18,3,0.48), rgba(38,18,4,0.92))',
+        cardBg: 'rgba(74, 36, 8, 0.88)',
+        sealIcon: '🪷',
+        sealTitle: 'SUBHA KALYANAM',
+        sealSub: 'Tap Lotus Seal to Open',
+        heroBg: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=1920&q=80',
+        verse: '॥ शुभमस्तु ॥ May Lord Venkateswara shower eternal joy &amp; prosperity upon the couple',
+        groom: 'Karthik Reddy',
+        bride: 'Priyanka Rao',
+        inviteLine: 'Cordially invite you and your family to bless the newlyweds',
+        dateDay: 'Thursday',
+        dateBig: '18 FEB 2027',
+        dateTime: 'Sumuhurtham at 9:45 AM',
+        events: [
+          {
+            icon: '🛕',
+            name: 'Kalyana Mahotsavam',
+            detail: 'Thursday, 18th February 2027 at 9:45 AM<br><strong>Annavaram Temple Devasthanam Hall</strong><br>Annavaram, Andhra Pradesh',
+            venueText: 'Annavaram Temple Devasthanam Hall, Annavaram, Andhra Pradesh',
+            startICS: '20270218T094500',
+            endICS: '20270218T130000',
+            mapUrl: 'https://maps.google.com/?q=Annavaram+Andhra+Pradesh'
+          },
+          {
+            icon: '🎊',
+            name: 'Evening Reception & Dinner',
+            detail: 'Friday, 19th February 2027 at 7:30 PM<br><strong>Novotel Varun Beach Ballroom</strong><br>Beach Road, Visakhapatnam',
+            venueText: 'Novotel Varun Beach Ballroom, Beach Road, Visakhapatnam',
+            startICS: '20270219T193000',
+            endICS: '20270219T223000',
+            mapUrl: 'https://maps.google.com/?q=Visakhapatnam+Beach+Road'
+          }
+        ],
+        gallery: [
+          'https://images.unsplash.com/photo-1595407753234-0882f1e77954?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=800&q=80'
+        ],
+        groomFamily: 'Son of<br><strong>Sri Prabhakar Reddy</strong><br>&amp; <strong>Smt. Padmaja Reddy</strong><br>Grandson of Sri Venkata Reddy',
+        brideFamily: 'Daughter of<br><strong>Sri Srinivas Rao</strong><br>&amp; <strong>Smt. Lakshmi Rao</strong><br>Granddaughter of Sri Narasimha Rao',
+        relatives: 'With Best Compliments: Reddy &amp; Rao Families, Relatives &amp; Friends'
+      },
+      {
+        id: 'hindu-3',
+        category: 'hindu',
+        badge: 'Hindu • ₹1,499',
+        title: 'Peacock Teal & Temple Gold Vivah',
+        desc: 'Regal Mysuru peacock teal & temple bronze theme with Sacred Agni doors, Vedic Saptapadi blessing, date scratch card, Mysuru & Bengaluru palace venues, and family hosts.',
+        bgMain: '#062124',
+        textMain: '#f2fbfb',
+        doorBg: 'radial-gradient(circle at center, #0e4a52 0%, #04191c 100%)',
+        heroGrad: 'linear-gradient(to bottom, rgba(4,25,28,0.48), rgba(6,33,36,0.92))',
+        cardBg: 'rgba(11, 56, 61, 0.88)',
+        sealIcon: '🦚',
+        sealTitle: 'MANGALYAM',
+        sealSub: 'Tap Peacock Seal to Open',
+        heroBg: 'https://images.unsplash.com/photo-1595407753234-0882f1e77954?auto=format&fit=crop&w=1920&q=80',
+        verse: '॥ मांगल्यं तन्तुनानेन मम जीवनहेतुना ॥ Seven Steps Together Into Eternity',
+        groom: 'Vikramaditya Nair',
+        bride: 'Meera Krishnan',
+        inviteLine: 'Joyfully invite your esteemed presence &amp; blessings on their Sacred Vivah',
+        dateDay: 'Wednesday',
+        dateBig: '14 APR 2027',
+        dateTime: 'Abhijit Muhurtham at 11:05 AM',
+        events: [
+          {
+            icon: '🦚',
+            name: 'Vedic Vivah &amp; Saptapadi',
+            detail: 'Wednesday, 14th April 2027 at 11:05 AM<br><strong>Lalitha Mahal Palace Gardens</strong><br>Siddhartha Layout, Mysuru, Karnataka',
+            venueText: 'Lalitha Mahal Palace Gardens, Mysuru, Karnataka',
+            startICS: '20270414T110500',
+            endICS: '20270414T140000',
+            mapUrl: 'https://maps.google.com/?q=Lalitha+Mahal+Palace+Mysuru'
+          },
+          {
+            icon: '✨',
+            name: 'Royal Reception Evening',
+            detail: 'Friday, 16th April 2027 at 7:30 PM<br><strong>The Leela Palace Grand Ballroom</strong><br>Old Airport Road, Bengaluru',
+            venueText: 'The Leela Palace Grand Ballroom, Old Airport Road, Bengaluru',
+            startICS: '20270416T193000',
+            endICS: '20270416T230000',
+            mapUrl: 'https://maps.google.com/?q=The+Leela+Palace+Bengaluru'
+          }
+        ],
+        gallery: [
+          'https://images.unsplash.com/photo-1595407753234-0882f1e77954?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80'
+        ],
+        groomFamily: 'Son of<br><strong>Sri Harishankar Nair</strong><br>&amp; <strong>Smt. Radhika Nair</strong><br>Grandson of Late Sri Madhavan Nair',
+        brideFamily: 'Daughter of<br><strong>Sri Gopalakrishnan</strong><br>&amp; <strong>Smt. Gayathri Krishnan</strong><br>Granddaughter of Sri Sundaram Iyer',
+        relatives: 'Soliciting Your Presence: Nair &amp; Krishnan Families, Elders &amp; Friends'
+      },
+      {
+        id: 'christian-1',
+        category: 'christian',
+        badge: 'Christian • ₹999',
+        title: 'Ivory & Sapphire Holy Matrimony',
+        desc: 'Cross seal 3D doors, Mark 10:9 scripture hero, scratch-card wedding date, St. Mary’s Basilica Secunderabad & Taj Deccan venues, gallery, and family credits.',
+        bgMain: '#091326',
+        textMain: '#f4f7fc',
+        doorBg: 'radial-gradient(circle at center, #14284b 0%, #070f1f 100%)',
+        heroGrad: 'linear-gradient(to bottom, rgba(7,15,31,0.5), rgba(9,19,38,0.92))',
+        cardBg: 'rgba(16, 33, 64, 0.88)',
+        sealIcon: '✝️',
+        sealTitle: 'HOLY MATRIMONY',
+        sealSub: 'Tap Cross Seal to Open',
+        heroBg: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1920&q=80',
+        verse: '“Therefore what God has joined together, let no one separate.” — Mark 10:9',
+        groom: 'Daniel Fernandez',
+        bride: "Hannah D'Souza",
+        inviteLine: 'Together with their parents joyfully invite you to their Wedding &amp; Reception',
+        dateDay: 'Saturday',
+        dateBig: '14 FEB 2027',
+        dateTime: 'Nuptial Mass at 4:00 PM',
+        events: [
+          {
+            icon: '⛪',
+            name: 'Holy Nuptial Mass',
+            detail: "Saturday, 14th February 2027 at 4:00 PM<br><strong>St. Mary's Basilica Cathedral</strong><br>Secunderabad, Hyderabad, Telangana",
+            venueText: "St. Mary's Basilica Cathedral, Secunderabad, Hyderabad, Telangana",
+            startICS: '20270214T160000',
+            endICS: '20270214T180000',
+            mapUrl: 'https://maps.google.com/?q=St+Marys+Basilica+Secunderabad'
+          },
+          {
+            icon: '🥂',
+            name: 'Dinner &amp; Dance Reception',
+            detail: 'Saturday, 14th February 2027 at 7:30 PM<br><strong>The Crystal Ballroom, Taj Deccan</strong><br>Banjara Hills, Hyderabad',
+            venueText: 'The Crystal Ballroom, Taj Deccan, Banjara Hills, Hyderabad',
+            startICS: '20270214T193000',
+            endICS: '20270214T230000',
+            mapUrl: 'https://maps.google.com/?q=Taj+Deccan+Hyderabad'
+          }
+        ],
+        gallery: [
+          'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80'
+        ],
+        groomFamily: 'Son of<br><strong>Mr. Joseph Fernandez</strong><br>&amp; <strong>Mrs. Maria Fernandez</strong><br>Grandson of Late Mr. Thomas Fernandez',
+        brideFamily: "Daughter of<br><strong>Mr. Peter D'Souza</strong><br>&amp; <strong>Mrs. Grace D'Souza</strong><br>Granddaughter of Mr. Anthony D'Souza",
+        relatives: "Warmly Invited By: Fernandez &amp; D'Souza Families, Godparents &amp; Friends"
+      },
+      {
+        id: 'christian-2',
+        category: 'christian',
+        badge: 'Christian • ₹1,299',
+        title: 'Velvet Burgundy & Rose White Vows',
+        desc: 'Romantic burgundy & gold cathedral theme with Dove seal doors, 1 Corinthians 13:7 verse, date scratch card, St. John’s CSI Cathedral & ITC Kakatiya venues, and family hosts.',
+        bgMain: '#1f0812',
+        textMain: '#fdf5f8',
+        doorBg: 'radial-gradient(circle at center, #4d122a 0%, #1c060f 100%)',
+        heroGrad: 'linear-gradient(to bottom, rgba(28,6,15,0.48), rgba(31,8,18,0.92))',
+        cardBg: 'rgba(58, 14, 32, 0.88)',
+        sealIcon: '🕊️',
+        sealTitle: 'SACRED VOWS',
+        sealSub: 'Tap Dove Seal to Open',
+        heroBg: 'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=1920&q=80',
+        verse: '“Love bears all things, believes all things, hopes all things, endures all things.” — 1 Corinthians 13:7',
+        groom: 'Samuel Mathew',
+        bride: 'Sharon Thomas',
+        inviteLine: 'Request the pleasure of your company at their Nuptial Blessing &amp; Reception',
+        dateDay: 'Sunday',
+        dateBig: '28 FEB 2027',
+        dateTime: 'Wedding Service at 4:30 PM',
+        events: [
+          {
+            icon: '⛪',
+            name: 'Church Wedding Service',
+            detail: "Sunday, 28th February 2027 at 4:30 PM<br><strong>St. John's CSI Cathedral</strong><br>East Marredpally, Secunderabad",
+            venueText: "St. John's CSI Cathedral, East Marredpally, Secunderabad",
+            startICS: '20270228T163000',
+            endICS: '20270228T183000',
+            mapUrl: 'https://maps.google.com/?q=Secunderabad+Telangana'
+          },
+          {
+            icon: '🎂',
+            name: 'Grand Banquet &amp; Toast',
+            detail: 'Sunday, 28th February 2027 at 7:30 PM<br><strong>ITC Kakatiya Imperial Ballroom</strong><br>Begumpet, Hyderabad',
+            venueText: 'ITC Kakatiya Imperial Ballroom, Begumpet, Hyderabad',
+            startICS: '20270228T193000',
+            endICS: '20270228T230000',
+            mapUrl: 'https://maps.google.com/?q=ITC+Kakatiya+Hyderabad'
+          }
+        ],
+        gallery: [
+          'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=800&q=80'
+        ],
+        groomFamily: 'Son of<br><strong>Mr. George Mathew</strong><br>&amp; <strong>Mrs. Susan Mathew</strong><br>Grandson of Late Mr. Philip Mathew',
+        brideFamily: 'Daughter of<br><strong>Mr. Jacob Thomas</strong><br>&amp; <strong>Mrs. Elizabeth Thomas</strong><br>Granddaughter of Mr. Abraham Thomas',
+        relatives: 'Joyfully Invited By: Mathew &amp; Thomas Families, Best Man, Bridesmaids &amp; Friends'
+      },
+      {
+        id: 'christian-3',
+        category: 'christian',
+        badge: 'Christian • ₹1,499',
+        title: 'Olive & Botanical Garden Matrimony',
+        desc: 'Enchanted emerald-olive & champagne gold vineyard theme with Wedding Rings seal doors, Song of Solomon verse, date scratch card, Goa Basilica & Beach Resort venues.',
+        bgMain: '#121c12',
+        textMain: '#f5f8f2',
+        doorBg: 'radial-gradient(circle at center, #293d29 0%, #0d140d 100%)',
+        heroGrad: 'linear-gradient(to bottom, rgba(13,20,13,0.48), rgba(18,28,18,0.92))',
+        cardBg: 'rgba(31, 48, 31, 0.88)',
+        sealIcon: '💍',
+        sealTitle: 'TWO BECOME ONE',
+        sealSub: 'Tap Rings Seal to Open',
+        heroBg: 'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=1920&q=80',
+        verse: '“I have found the one whom my soul loves.” — Song of Solomon 3:4',
+        groom: 'Ethan Rodrigues',
+        bride: 'Claire Pereira',
+        inviteLine: 'Joyfully invite you to share in their Nuptial Mass &amp; Sunset Garden Reception',
+        dateDay: 'Saturday',
+        dateBig: '08 MAY 2027',
+        dateTime: 'Nuptial Blessing at 4:00 PM',
+        events: [
+          {
+            icon: '⛪',
+            name: 'Nuptial Blessing Ceremony',
+            detail: 'Saturday, 8th May 2027 at 4:00 PM<br><strong>Our Lady of the Immaculate Conception Church</strong><br>Panjim, North Goa',
+            venueText: 'Our Lady of the Immaculate Conception Church, Panjim, Goa',
+            startICS: '20270508T160000',
+            endICS: '20270508T180000',
+            mapUrl: 'https://maps.google.com/?q=Our+Lady+of+the+Immaculate+Conception+Church+Goa'
+          },
+          {
+            icon: '🌿',
+            name: 'Sunset Garden Dinner &amp; Toast',
+            detail: 'Saturday, 8th May 2027 at 7:00 PM<br><strong>Taj Exotica Seaside Lawn</strong><br>Benaulim, South Goa',
+            venueText: 'Taj Exotica Seaside Lawn, Benaulim, South Goa',
+            startICS: '20270508T190000',
+            endICS: '20270508T230000',
+            mapUrl: 'https://maps.google.com/?q=Taj+Exotica+Resort+Goa'
+          }
+        ],
+        gallery: [
+          'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=800&q=80'
+        ],
+        groomFamily: 'Son of<br><strong>Mr. Francis Rodrigues</strong><br>&amp; <strong>Mrs. Teresa Rodrigues</strong><br>Grandson of Late Mr. Lawrence Rodrigues',
+        brideFamily: 'Daughter of<br><strong>Mr. Vincent Pereira</strong><br>&amp; <strong>Mrs. Clara Pereira</strong><br>Granddaughter of Mr. Manuel Pereira',
+        relatives: 'With Love &amp; Blessings: Rodrigues &amp; Pereira Families, Godparents &amp; Friends'
+      }
+    ];
+
+    let activeTemplate = null;
+
+    // Toast notification helper
+    let toastTimer;
+    function showToast(msg) {
+      const banner = document.getElementById('toastBanner');
+      document.getElementById('toastMessage').textContent = msg;
+      banner.classList.remove('hidden');
+      banner.classList.add('flex');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        banner.classList.add('hidden');
+        banner.classList.remove('flex');
+      }, 3500);
+    }
+
+    // Render Template Cards
+    function renderCards(filter = 'all') {
+      const grid = document.getElementById('templatesGrid');
+      const items = filter === 'all' ? TEMPLATES : TEMPLATES.filter(t => t.category === filter);
+
+      grid.innerHTML = items.map(tpl => `
+        <article class="rounded-2xl bg-white border border-gold/30 overflow-hidden flex flex-col justify-between hover:border-gold hover:-translate-y-1 transition-all duration-300 shadow-lg shadow-stone-200/80">
+          <div>
+            <div class="relative h-56 overflow-hidden cursor-pointer group" onclick="openLivePreview('${tpl.id}')">
+              <img src="${tpl.heroBg}" alt="${tpl.title}"
+                   onerror="this.src='https://placehold.co/800x600/faf6f0/8c6214?text=Aurelia+Vows'"
+                   class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent"></div>
+              <span class="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-white/95 border border-gold/50 text-gold-dark text-xs font-semibold backdrop-blur-md shadow-sm">
+                ${tpl.badge}
+              </span>
+              <div class="absolute bottom-3 left-4 right-4">
+                <div class="font-script text-3xl text-gold-light drop-shadow">${tpl.groom} &amp; ${tpl.bride}</div>
+              </div>
+            </div>
+            <div class="p-6 pb-4">
+              <h3 class="font-display text-lg font-bold text-[#2C211B] mb-2">${tpl.title}</h3>
+              <p class="text-xs sm:text-sm text-[#6B5A50] leading-relaxed">${tpl.desc}</p>
+            </div>
+          </div>
+          <div class="px-6 pb-6 flex flex-col gap-2.5">
+            <button onclick="openLivePreview('${tpl.id}')"
+                    class="w-full py-2.5 px-4 rounded-full bg-gradient-to-r from-gold to-gold-dark text-white font-bold text-xs sm:text-sm hover:brightness-110 transition-all shadow-md">
+              Live Preview
+            </button>
+            <a href="#enquiry" onclick="selectTemplate('${tpl.title}')"
+               class="w-full text-center py-2 px-4 rounded-full bg-[#FAF6F0] border border-gold/35 text-[#4A3B32] text-xs font-semibold hover:border-gold hover:text-gold-dark transition-all">
+              Order Customization
+            </a>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function filterCards(cat, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => {
+        b.classList.remove('active', 'bg-gold', 'text-white', 'font-semibold', 'shadow-sm');
+        b.classList.add('bg-white', 'border', 'border-gold/40', 'text-[#4A3B32]', 'font-medium');
+      });
+      btn.classList.add('active', 'bg-gold', 'text-white', 'font-semibold', 'shadow-sm');
+      btn.classList.remove('bg-white', 'border', 'border-gold/40', 'text-[#4A3B32]', 'font-medium');
+      renderCards(cat);
+    }
+
+    // =========================================================================
+    // FULL-SCREEN LIVE TEMPLATE PREVIEW MODAL LOGIC
+    // =========================================================================
+    function openLivePreview(id) {
+      const tpl = TEMPLATES.find(t => t.id === id);
+      if (!tpl) return;
+      activeTemplate = tpl;
+
+      // Apply exact religious theme colors
+      const root = document.getElementById('modal-theme-root');
+      root.style.backgroundColor = tpl.bgMain;
+      root.style.color = tpl.textMain;
+
+      document.getElementById('door-left').style.background = tpl.doorBg;
+      document.getElementById('door-right').style.background = tpl.doorBg;
+      document.getElementById('modal-seal-icon').textContent = tpl.sealIcon;
+      document.getElementById('modal-seal-title').textContent = tpl.sealTitle;
+      document.getElementById('modal-seal-sub').textContent = tpl.sealSub;
+
+      // Reset Doors to closed state
+      const doorOverlay = document.getElementById('door-overlay');
+      doorOverlay.classList.remove('opened');
+      doorOverlay.style.display = 'flex';
+
+      // Populate Hero
+      document.getElementById('modal-hero-bg').style.backgroundImage = `url('${tpl.heroBg}')`;
+      document.getElementById('modal-hero-overlay').style.background = tpl.heroGrad;
+      document.getElementById('modal-verse').innerHTML = tpl.verse;
+      document.getElementById('modal-groom').innerHTML = tpl.groom;
+      document.getElementById('modal-bride').innerHTML = tpl.bride;
+      document.getElementById('modal-invite-line').innerHTML = tpl.inviteLine;
+
+      // Populate Scratch Card
+      document.getElementById('modal-scratch-card').style.background = tpl.cardBg;
+      document.getElementById('modal-date-day').textContent = tpl.dateDay;
+      document.getElementById('modal-date-big').textContent = tpl.dateBig;
+      document.getElementById('modal-date-time').textContent = tpl.dateTime;
+
+      // Populate Events & Google Maps + Save the Date Buttons (No embedded map iframes)
+      document.getElementById('modal-events-grid').innerHTML = tpl.events.map((ev, idx) => `
+        <div class="border border-gold/45 rounded-2xl p-6 sm:p-8 text-center shadow-xl hover:-translate-y-1 transition-transform flex flex-col justify-between" style="background: ${tpl.cardBg};">
+          <div>
+            <div class="text-4xl mb-3">${ev.icon}</div>
+            <h3 class="font-display text-xl sm:text-2xl text-gold mb-3">${ev.name}</h3>
+            <p class="text-sm leading-relaxed text-[#e8dfd3] mb-6">${ev.detail}</p>
+          </div>
+          <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+            <a href="${ev.mapUrl}" target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-full bg-gradient-to-r from-gold to-gold-dark text-obsidian font-semibold text-xs sm:text-sm tracking-wide shadow-md hover:brightness-110 transition-all">
+              📍 Open Location in Google Maps
+            </a>
+            <button type="button" onclick="downloadSaveTheDate(${idx})"
+                    class="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-full border border-gold text-gold-light font-semibold text-xs sm:text-sm tracking-wide hover:bg-gold hover:text-obsidian transition-all">
+              📅 Save the Date
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      // Populate 4-Photo Gallery
+      document.getElementById('modal-gallery-grid').innerHTML = tpl.gallery.map(src => `
+        <div onclick="openLightbox('${src}')" class="relative h-56 sm:h-64 rounded-xl overflow-hidden border border-gold/40 cursor-pointer group">
+          <img src="${src}" alt="Couple Moment"
+               onerror="this.src='https://placehold.co/600x750/16120e/d4af37?text=Wedding+Memory'"
+               class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+        </div>
+      `).join('');
+
+      // Populate Families Section
+      document.getElementById('modal-family-box').style.background = tpl.cardBg;
+      document.getElementById('modal-groom-family').innerHTML = tpl.groomFamily;
+      document.getElementById('modal-bride-family').innerHTML = tpl.brideFamily;
+      document.getElementById('modal-relatives').innerHTML = tpl.relatives;
+
+      // Show Modal
+      const modal = document.getElementById('previewModal');
+      modal.classList.remove('hidden');
+      modal.scrollTop = 0;
+      document.body.style.overflow = 'hidden';
+
+      setTimeout(initScratchCanvas, 60);
+    }
+
+    function closeLivePreview() {
+      document.getElementById('previewModal').classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    function replayDoors() {
+      const modal = document.getElementById('previewModal');
+      modal.scrollTo({ top: 0, behavior: 'smooth' });
+      const doorOverlay = document.getElementById('door-overlay');
+      doorOverlay.style.display = 'flex';
+      requestAnimationFrame(() => {
+        doorOverlay.classList.remove('opened');
+      });
+    }
+
+    function openDoors() {
+      document.getElementById('door-overlay').classList.add('opened');
+      // Web Audio celebratory chime synthesis
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioCtx();
+        [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.14);
+          gain.gain.setValueAtTime(0.12, ctx.currentTime + i * 0.14);
+          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + i * 0.14 + 1.4);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + i * 0.14);
+          osc.stop(ctx.currentTime + i * 0.14 + 1.4);
+        });
+      } catch (e) {}
+    }
+
+    function scrollToScratch() {
+      document.getElementById('modal-scratch-section').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function orderActiveTemplate() {
+      if (!activeTemplate) return;
+      closeLivePreview();
+      selectTemplate(activeTemplate.title);
+      document.getElementById('enquiry').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Download .ics Calendar Invite for Save the Date
+    function downloadSaveTheDate(eventIndex = 0) {
+      if (!activeTemplate) return;
+      const ev = activeTemplate.events[eventIndex] || activeTemplate.events[0];
+      const cleanEventName = ev.name.replace(/&amp;/g, '&');
+      const summary = `${activeTemplate.groom} & ${activeTemplate.bride} - ${cleanEventName}`;
+      const description = `You are cordially invited to the ${cleanEventName} of ${activeTemplate.groom} & ${activeTemplate.bride}. Location: ${ev.mapUrl}`;
+      const uid = `${activeTemplate.id}-${eventIndex}-${Date.now()}@aureliavows.com`;
+      const dtStamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+
+      const icsLines = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//Aurelia Vows//Digital Wedding Invitation//EN',
+        'CALSCALE:GREGORIAN',
+        'METHOD:PUBLISH',
+        'BEGIN:VEVENT',
+        `UID:${uid}`,
+        `DTSTAMP:${dtStamp}`,
+        `DTSTART:${ev.startICS}`,
+        `DTEND:${ev.endICS}`,
+        `SUMMARY:${summary}`,
+        `DESCRIPTION:${description}`,
+        `LOCATION:${ev.venueText}`,
+        `URL:${ev.mapUrl}`,
+        'STATUS:CONFIRMED',
+        'END:VEVENT',
+        'END:VCALENDAR'
+      ].join('\r\n');
+
+      const blob = new Blob([icsLines], { type: 'text/calendar;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${activeTemplate.groom.replace(/\s+/g, '_')}_${activeTemplate.bride.replace(/\s+/g, '_')}_SaveTheDate.ics`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      showToast(`📅 Saved "${cleanEventName}" to your calendar!`);
+    }
+
+    // HTML5 Canvas Scratch Card Logic
+    const scratchCanvas = document.getElementById('scratch-canvas');
+    const scratchCtx = scratchCanvas.getContext('2d');
+    let isDrawing = false;
+    let isRevealed = false;
+
+    function initScratchCanvas() {
+      isRevealed = false;
+      isDrawing = false;
+      scratchCanvas.style.display = 'block';
+      scratchCanvas.style.opacity = '1';
+
+      const rect = scratchCanvas.parentElement.getBoundingClientRect();
+      scratchCanvas.width = rect.width || 360;
+      scratchCanvas.height = rect.height || 208;
+
+      scratchCtx.globalCompositeOperation = 'source-over';
+      const grad = scratchCtx.createLinearGradient(0, 0, scratchCanvas.width, scratchCanvas.height);
+      grad.addColorStop(0, '#bf953f');
+      grad.addColorStop(0.3, '#fcf6ba');
+      grad.addColorStop(0.6, '#b38728');
+      grad.addColorStop(1, '#aa771c');
+      scratchCtx.fillStyle = grad;
+      scratchCtx.fillRect(0, 0, scratchCanvas.width, scratchCanvas.height);
+
+      scratchCtx.fillStyle = '#241706';
+      scratchCtx.font = 'bold 14px Montserrat, sans-serif';
+      scratchCtx.textAlign = 'center';
+      scratchCtx.fillText('✨ SCRATCH HERE TO REVEAL DATE ✨', scratchCanvas.width / 2, scratchCanvas.height / 2 + 5);
+    }
+
+    function getPointerPos(e) {
+      const rect = scratchCanvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return {
+        x: (clientX - rect.left) * (scratchCanvas.width / rect.width),
+        y: (clientY - rect.top) * (scratchCanvas.height / rect.height)
+      };
+    }
+
+    function scratchAt(x, y) {
+      if (isRevealed) return;
+      scratchCtx.globalCompositeOperation = 'destination-out';
+      scratchCtx.beginPath();
+      scratchCtx.arc(x, y, 24, 0, Math.PI * 2);
+      scratchCtx.fill();
+      checkScratchPercent();
+    }
+
+    function checkScratchPercent() {
+      const pixels = scratchCtx.getImageData(0, 0, scratchCanvas.width, scratchCanvas.height).data;
+      let cleared = 0;
+      for (let i = 3; i < pixels.length; i += 16) {
+        if (pixels[i] === 0) cleared++;
+      }
+      if (cleared / (pixels.length / 16) > 0.45) {
+        revealAllScratch();
+      }
+    }
+
+    function revealAllScratch() {
+      isRevealed = true;
+      scratchCanvas.style.opacity = '0';
+      setTimeout(() => {
+        scratchCanvas.style.display = 'none';
+      }, 600);
+    }
+
+    scratchCanvas.addEventListener('mousedown', (e) => {
+      isDrawing = true;
+      const p = getPointerPos(e);
+      scratchAt(p.x, p.y);
+    });
+    scratchCanvas.addEventListener('mousemove', (e) => {
+      if (!isDrawing) return;
+      const p = getPointerPos(e);
+      scratchAt(p.x, p.y);
+    });
+    window.addEventListener('mouseup', () => { isDrawing = false; });
+
+    scratchCanvas.addEventListener('touchstart', (e) => {
+      isDrawing = true;
+      const p = getPointerPos(e);
+      scratchAt(p.x, p.y);
+    }, { passive: true });
+    scratchCanvas.addEventListener('touchmove', (e) => {
+      if (!isDrawing) return;
+      const p = getPointerPos(e);
+      scratchAt(p.x, p.y);
+    }, { passive: true });
+    window.addEventListener('touchend', () => { isDrawing = false; });
+
+    // Lightbox helpers
+    function openLightbox(src) {
+      document.getElementById('lightbox-img').src = src;
+      const lb = document.getElementById('lightbox');
+      lb.classList.remove('hidden');
+      lb.classList.add('flex');
+    }
+    function closeLightbox() {
+      const lb = document.getElementById('lightbox');
+      lb.classList.add('hidden');
+      lb.classList.remove('flex');
+    }
+
+    // Enquiry Form Helpers
+    function selectTemplate(name) {
+      const sel = document.getElementById('cust-tpl');
+      for (let i = 0; i < sel.options.length; i++) {
+        if (sel.options[i].text.includes(name)) {
+          sel.selectedIndex = i;
+          break;
+        }
+      }
+      showToast(`Selected "${name}"`);
+    }
+
+    function selectPlan(planText) {
+      const sel = document.getElementById('cust-tpl');
+      for (let i = 0; i < sel.options.length; i++) {
+        if (sel.options[i].value === planText) {
+          sel.selectedIndex = i;
+          break;
+        }
+      }
+      showToast(`Selected ${planText}`);
+    }
+
+    function sendWhatsApp() {
+      const name = document.getElementById('cust-name').value.trim() || 'Client';
+      const tpl = document.getElementById('cust-tpl').value;
+      const msg = document.getElementById('cust-msg').value.trim() || 'Please share sample details.';
+      const text = encodeURIComponent(`Hello Aurelia Vows!\nName: ${name}\nTemplate: ${tpl}\nDetails: ${msg}`);
+      showToast('Opening WhatsApp...');
+      window.open(`https://wa.me/917569211459?text=${text}`, '_blank', 'noopener,noreferrer');
+    }
+
+    function sendEmail() {
+      const name = document.getElementById('cust-name').value.trim() || 'Client';
+      const tpl = document.getElementById('cust-tpl').value;
+      const msg = document.getElementById('cust-msg').value.trim() || 'Please share sample details.';
+      const subject = encodeURIComponent(`Wedding Invitation Enquiry - ${tpl}`);
+      const body = encodeURIComponent(`Name: ${name}\nSelected Template: ${tpl}\nDetails: ${msg}`);
+      showToast('Opening email for mohammadabdulkhader20@gmail.com');
+      window.location.href = `mailto:mohammadabdulkhader20@gmail.com?subject=${subject}&body=${body}`;
+    }
+
+    // Mobile Menu Toggle
+    document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+      document.getElementById('mobileMenu').classList.toggle('hidden');
+    });
+
+    // Floating Golden Particles Animation
+    function startParticles() {
+      const canvas = document.getElementById('bgParticles');
+      const ctx = canvas.getContext('2d');
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      const dots = Array.from({ length: 40 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 2.2 + 0.6,
+        dy: Math.random() * 0.45 + 0.15,
+        alpha: Math.random() * 0.65 + 0.2
+      }));
+
+      function loop() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        dots.forEach(d => {
+          d.y -= d.dy;
+          if (d.y < -10) {
+            d.y = canvas.height + 10;
+            d.x = Math.random() * canvas.width;
+          }
+          ctx.beginPath();
+          ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(212, 175, 55, ${d.alpha})`;
+          ctx.fill();
+        });
+        requestAnimationFrame(loop);
+      }
+      loop();
+    }
+
+    window.onload = function () {
+      renderCards('all');
+      startParticles();
+    };
+  </script>
+</body>
+</html>
