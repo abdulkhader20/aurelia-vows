@@ -1,0 +1,6 @@
+outputs/
+work/
+.git/
+.codex/
+node_modules/
+.vercel/
