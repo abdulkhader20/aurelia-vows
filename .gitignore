@@ -1,13 +1,8 @@
-# Dependencies
 node_modules/
-
-# Vercel
 .vercel/
-
-# OS files
+.env*
+outputs/reviews.json
 .DS_Store
 Thumbs.db
-
-# Editor files
 .vscode/
 .idea/
